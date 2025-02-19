@@ -1,4 +1,6 @@
 venv/
+data/
+*.db
 
 # Node.js
 node_modules/
