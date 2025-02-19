@@ -1,7 +1,7 @@
 {
-  "name": "fastapi-react-electron",
+  "name": "open_recall",
   "version": "1.0.0",
-  "description": "FastAPI React Desktop App",
+  "description": "Open_Recall Desktop App",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
