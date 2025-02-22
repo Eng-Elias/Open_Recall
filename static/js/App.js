@@ -1,45 +1,177 @@
-function App() {
-    const [message, setMessage] = React.useState("Welcome to FastAPI + React!");
+const App = () => {
+  const [screenshots, setScreenshots] = React.useState(null);
+  const [allTags, setAllTags] = React.useState([]);
+  const [filters, setFilters] = React.useState({
+    startDate: "",
+    endDate: "",
+    appName: "",
+    isFavorite: false,
+    selectedTags: [],
+    searchText: "",
+    page: 1,
+  });
+  const [loading, setLoading] = React.useState(true);
 
-    return (
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="card shadow">
-                        <div className="card-body">
-                            <h1 className="text-center mb-4">{message}</h1>
-                            <div className="d-flex justify-content-center">
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() => setMessage("Button clicked!")}>
-                                    Click Me
-                                </button>
-                            </div>
-                            <div className="row mt-4">
-                                <div className="col-md-6">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <h5 className="card-title">Feature 1</h5>
-                                            <p className="card-text">This is a sample feature card using Bootstrap styling.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <h5 className="card-title">Feature 2</h5>
-                                            <p className="card-text">Another feature card showcasing Bootstrap's card component.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  // Fetch screenshots with current filters
+  const fetchScreenshots = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (filters.startDate) params.append("start_date", filters.startDate);
+      if (filters.endDate) params.append("end_date", filters.endDate);
+      if (filters.appName) params.append("app_name", filters.appName);
+      if (filters.isFavorite) params.append("is_favorite", true);
+      if (filters.selectedTags.length > 0) {
+        filters.selectedTags.forEach((tagId) => {
+          params.append("tag_ids", tagId);
+        });
+      }
+      if (filters.searchText) params.append("search_text", filters.searchText);
+      params.append("page", filters.page);
+
+      const response = await fetch(`/api/screenshots?${params.toString()}`);
+      const data = await response.json();
+      setScreenshots(data);
+    } catch (error) {
+      console.error("Error fetching screenshots:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTags = async () => {
+    try {
+      const response = await fetch("/api/tags");
+      const data = await response.json();
+      setAllTags(data);
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchTags();
+  }, []);
+
+  React.useEffect(() => {
+    fetchScreenshots();
+  }, [filters]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters({ ...newFilters, page: 1 }); // Reset to page 1 when filters change
+  };
+
+  const handlePageChange = (newPage) => {
+    setFilters({ ...filters, page: newPage });
+  };
+
+  const handleTagSelect = (tagId) => {
+    const selectedTags = filters.selectedTags.includes(tagId)
+      ? filters.selectedTags.filter((id) => id !== tagId)
+      : [...filters.selectedTags, tagId];
+    setFilters({ ...filters, selectedTags, page: 1 }); // Reset to page 1 when tags change
+  };
+
+  const handleTagCreate = async (tagName) => {
+    try {
+      const response = await fetch("/api/tags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: tagName }),
+      });
+      if (response.ok) {
+        fetchTags();
+      }
+    } catch (error) {
+      console.error("Error creating tag:", error);
+    }
+  };
+
+  const handleToggleFavorite = async (screenshotId) => {
+    try {
+      const response = await fetch(
+        `/api/screenshots/${screenshotId}/favorite`,
+        {
+          method: "PUT",
+        }
+      );
+      if (response.ok) {
+        fetchScreenshots();
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
+
+  // Add tag to screenshot
+  const handleAddTag = async (screenshotId, tagId) => {
+    try {
+      const response = await fetch(
+        `/api/screenshots/${screenshotId}/tags/${tagId}`,
+        {
+          method: "POST",
+        }
+      );
+      if (response.ok) {
+        fetchScreenshots();
+      }
+    } catch (error) {
+      console.error("Error adding tag:", error);
+    }
+  };
+
+  // Remove tag from screenshot
+  const handleRemoveTag = async (screenshotId, tagId) => {
+    try {
+      const response = await fetch(
+        `/api/screenshots/${screenshotId}/tags/${tagId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) {
+        fetchScreenshots();
+      }
+    } catch (error) {
+      console.error("Error removing tag:", error);
+    }
+  };
+
+  return (
+    <div className="container-fluid py-4">
+      <h1 className="mb-4">OpenRecall Screenshots</h1>
+
+      <FilterPanel filters={filters} onFilterChange={handleFilterChange} />
+
+      <TagManager
+        selectedTags={filters.selectedTags}
+        allTags={allTags}
+        onTagSelect={handleTagSelect}
+        onTagCreate={handleTagCreate}
+      />
+
+      <div className="screenshots-container">
+        {loading ? (
+          <div className="loading-spinner">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
-        </div>
-    );
-}
+          </div>
+        ) : (
+          <ScreenshotGrid
+            screenshots={screenshots}
+            allTags={allTags}
+            onToggleFavorite={handleToggleFavorite}
+            onAddTag={handleAddTag}
+            onRemoveTag={handleRemoveTag}
+            currentPage={filters.page}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+// Render the App
+ReactDOM.render(<App />, document.getElementById("root"));

@@ -22,7 +22,7 @@ class ScreenshotManager:
                 cls._instance = super().__new__(cls)
             return cls._instance
 
-    def __init__(self, storage_path: str = None, capture_interval: int = 3):
+    def __init__(self, storage_path: str = None, capture_interval: int = 60):
         if not hasattr(self, 'initialized'):
             self.storage_path = storage_path or self._get_default_storage_path()
             self.capture_interval = capture_interval
