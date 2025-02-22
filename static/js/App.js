@@ -1,6 +1,7 @@
 const App = () => {
   const [screenshots, setScreenshots] = React.useState(null);
   const [allTags, setAllTags] = React.useState([]);
+  const [appNames, setAppNames] = React.useState([]);
   const [filters, setFilters] = React.useState({
     startDate: "",
     endDate: "",
@@ -17,16 +18,29 @@ const App = () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      if (filters.startDate) params.append("start_date", filters.startDate);
-      if (filters.endDate) params.append("end_date", filters.endDate);
-      if (filters.appName) params.append("app_name", filters.appName);
-      if (filters.isFavorite) params.append("is_favorite", true);
+      
+      // Only add date parameters if they have values
+      if (filters.startDate) {
+        params.append("start_date", filters.startDate);
+      }
+      if (filters.endDate) {
+        params.append("end_date", filters.endDate);
+      }
+      
+      if (filters.appName) {
+        params.append("app_name", filters.appName);
+      }
+      if (filters.isFavorite) {
+        params.append("is_favorite", true);
+      }
       if (filters.selectedTags.length > 0) {
         filters.selectedTags.forEach((tagId) => {
           params.append("tag_ids", tagId);
         });
       }
-      if (filters.searchText) params.append("search_text", filters.searchText);
+      if (filters.searchText) {
+        params.append("search_text", filters.searchText);
+      }
       params.append("page", filters.page);
 
       const response = await fetch(`/api/screenshots?${params.toString()}`);
@@ -49,8 +63,19 @@ const App = () => {
     }
   };
 
+  const fetchAppNames = async () => {
+    try {
+      const response = await fetch("/api/app-names");
+      const data = await response.json();
+      setAppNames(data);
+    } catch (error) {
+      console.error("Error fetching app names:", error);
+    }
+  };
+
   React.useEffect(() => {
     fetchTags();
+    fetchAppNames();
   }, []);
 
   React.useEffect(() => {
@@ -141,7 +166,11 @@ const App = () => {
     <div className="container-fluid py-4">
       <h1 className="mb-4">OpenRecall Screenshots</h1>
 
-      <FilterPanel filters={filters} onFilterChange={handleFilterChange} />
+      <FilterPanel 
+        filters={filters} 
+        onFilterChange={handleFilterChange} 
+        appNameSuggestions={appNames}
+      />
 
       <TagManager
         selectedTags={filters.selectedTags}

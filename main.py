@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 import signal
 import sys
 import multiprocessing
-from datetime import datetime, date
+from datetime import datetime
 from typing import List, Optional
 from sqlalchemy import and_, or_, func
 import math
@@ -58,8 +58,8 @@ async def read_root(request: Request):
 
 @app.get("/api/screenshots", response_model=Page[ScreenshotResponse])
 async def get_screenshots(
-    start_date: Optional[date] = None,
-    end_date: Optional[date] = None,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
     app_name: Optional[str] = None,
     is_favorite: Optional[bool] = None,
     tag_ids: Optional[List[int]] = Query(None),
@@ -143,6 +143,12 @@ async def remove_tag_from_screenshot(screenshot_id: int, tag_id: int, db = Depen
         db.commit()
         return {"success": True}
     return {"success": False}
+
+@app.get("/api/app-names")
+async def get_app_names(db = Depends(get_db)):
+    """Get unique app names for autocomplete"""
+    app_names = db.query(Screenshot.app_name).distinct().all()
+    return [name[0] for name in app_names if name[0]]
 
 if __name__ == "__main__":
     config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=False)
