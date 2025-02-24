@@ -12,7 +12,6 @@ const App = () => {
     tagIds: [],
     searchText: "",
   });
-  console.log(filters);
   const [allTags, setAllTags] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [appNameSuggestions, setAppNameSuggestions] = React.useState([]);
@@ -191,7 +190,6 @@ const App = () => {
   }, [filters, currentPage]);
 
   const handleFilterChange = (name, value) => {
-    console.log(name, value);
     setFilters((prev) => ({ ...prev, [name]: value }));
     setCurrentPage(1);
   };
@@ -202,9 +200,13 @@ const App = () => {
 
   const handleToggleFavorite = async (screenshotId) => {
     try {
-      await fetch(`/api/toggle-favorite/${screenshotId}`, {
+      const response = await fetch(`/api/toggle-favorite/${screenshotId}`, {
         method: "POST",
       });
+      if (!response.ok) {
+        throw new Error("Failed to toggle favorite");
+      }
+      await fetchScreenshots(currentPage);
     } catch (error) {
       console.error("Error toggling favorite:", error);
     }
@@ -212,9 +214,13 @@ const App = () => {
 
   const handleAddTag = async (screenshotId, tagId) => {
     try {
-      await fetch(`/api/add-tag/${screenshotId}/${tagId}`, {
+      const response = await fetch(`/api/add-tag/${screenshotId}/${tagId}`, {
         method: "POST",
       });
+      if (!response.ok) {
+        throw new Error("Failed to add tag");
+      }
+      await fetchScreenshots(currentPage);
     } catch (error) {
       console.error("Error adding tag:", error);
     }
@@ -222,9 +228,13 @@ const App = () => {
 
   const handleRemoveTag = async (screenshotId, tagId) => {
     try {
-      await fetch(`/api/remove-tag/${screenshotId}/${tagId}`, {
+      const response = await fetch(`/api/remove-tag/${screenshotId}/${tagId}`, {
         method: "DELETE",
       });
+      if (!response.ok) {
+        throw new Error("Failed to remove tag");
+      }
+      await fetchScreenshots(currentPage);
     } catch (error) {
       console.error("Error removing tag:", error);
     }
@@ -260,6 +270,7 @@ const App = () => {
             onRemoveTag={handleRemoveTag}
             currentPage={currentPage}
             onPageChange={handlePageChange}
+            refetch={() => fetchScreenshots(currentPage)}
           />
         </div>
       </div>

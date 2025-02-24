@@ -9,6 +9,7 @@ const ScreenshotModal = ({
   allTags,
   isFirst,
   isLast,
+  refetch,
 }) => {
   const [screenshot, setScreenshot] = React.useState(initialScreenshot);
 
@@ -32,27 +33,26 @@ const ScreenshotModal = ({
 
   const handleToggleFavorite = async () => {
     await onToggleFavorite(screenshot.id);
-    setScreenshot(prev => ({
-      ...prev,
-      is_favorite: !prev.is_favorite
-    }));
+    setScreenshot((prev) => {
+      return { ...prev, is_favorite: !prev.is_favorite };
+    });
+    refetch();
   };
 
   const handleAddTag = async (tagId) => {
-    const tag = allTags.find(t => t.id === tagId);
     await onAddTag(screenshot.id, tagId);
-    setScreenshot(prev => ({
-      ...prev,
-      tags: [...prev.tags, tag]
-    }));
+    setScreenshot((prev) => {
+      return { ...prev, tags: [...prev.tags, tagId] };
+    });
+    refetch();
   };
 
   const handleRemoveTag = async (tagId) => {
     await onRemoveTag(screenshot.id, tagId);
-    setScreenshot(prev => ({
-      ...prev,
-      tags: prev.tags.filter(t => t.id !== tagId)
-    }));
+    setScreenshot((prev) => {
+      return { ...prev, tags: prev.tags.filter((t) => t.id !== tagId) };
+    });
+    refetch();
   };
 
   React.useEffect(() => {
@@ -72,13 +72,15 @@ const ScreenshotModal = ({
             <div className="d-flex justify-content-between align-items-center w-100">
               <div className="d-flex align-items-center gap-3">
                 <h5 className="modal-title mb-0">{screenshot.app_name}</h5>
-                <span className="text-muted">{formatDate(screenshot.timestamp)}</span>
+                <span className="text-muted">
+                  {formatDate(screenshot.timestamp)}
+                </span>
               </div>
               <div className="d-flex align-items-center gap-3">
                 <div className="tags-container">
-                  {screenshot.tags.map((tag) => (
+                  {screenshot.tags.map((tag, i) => (
                     <span
-                      key={tag.id}
+                      key={i}
                       className="badge bg-secondary me-1"
                       onClick={() => handleRemoveTag(tag.id)}
                       style={{ cursor: "pointer" }}
@@ -97,8 +99,7 @@ const ScreenshotModal = ({
                     <ul className="dropdown-menu">
                       {allTags
                         .filter(
-                          (tag) =>
-                            !screenshot.tags.some((t) => t.id === tag.id)
+                          (tag) => !screenshot.tags.some((t) => t.id === tag.id)
                         )
                         .map((tag) => (
                           <li key={tag.id}>
