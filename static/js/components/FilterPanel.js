@@ -1,6 +1,7 @@
 const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
   const [showAppNameSuggestions, setShowAppNameSuggestions] =
     React.useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = React.useState([]);
   const appNameRef = React.useRef(null);
 
   const handleInputChange = (field, value) => {
@@ -32,9 +33,25 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
     handleInputChange(field, localDate.toLocaleString());
   };
 
+  const handleAppNameChange = (value) => {
+    handleInputChange("appName", value);
+    setShowAppNameSuggestions(true);
+
+    // Filter suggestions based on input
+    if (value.trim() === "") {
+      setFilteredSuggestions([]);
+    } else {
+      const filtered = appNameSuggestions.filter((app) =>
+        app.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredSuggestions(filtered);
+    }
+  };
+
   const handleAppNameClick = (appName) => {
     handleInputChange("appName", appName);
     setShowAppNameSuggestions(false);
+    setFilteredSuggestions([]);
   };
 
   React.useEffect(() => {
@@ -78,27 +95,20 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
               type="text"
               className="form-control"
               value={filters.appName}
-              onChange={(e) => {
-                handleInputChange("appName", e.target.value);
-                setShowAppNameSuggestions(true);
-              }}
+              onChange={(e) => handleAppNameChange(e.target.value)}
               placeholder="Filter by app..."
             />
-            {showAppNameSuggestions && appNameSuggestions?.length > 0 && (
+            {showAppNameSuggestions && filteredSuggestions.length > 0 && (
               <div className="app-name-suggestions">
-                {appNameSuggestions
-                  .filter((app) =>
-                    app.toLowerCase().includes(filters.appName.toLowerCase())
-                  )
-                  .map((app) => (
-                    <div
-                      key={app}
-                      className="app-name-suggestion"
-                      onClick={() => handleAppNameClick(app)}
-                    >
-                      {app}
-                    </div>
-                  ))}
+                {filteredSuggestions.map((app) => (
+                  <div
+                    key={app}
+                    className="app-name-suggestion"
+                    onClick={() => handleAppNameClick(app)}
+                  >
+                    {app}
+                  </div>
+                ))}
               </div>
             )}
           </div>

@@ -147,8 +147,13 @@ async def remove_tag_from_screenshot(screenshot_id: int, tag_id: int, db = Depen
 @app.get("/api/app-names")
 async def get_app_names(db = Depends(get_db)):
     """Get unique app names for autocomplete"""
-    app_names = db.query(Screenshot.app_name).distinct().all()
-    return [name[0] for name in app_names if name[0]]
+    app_names = db.query(Screenshot.app_name)\
+                  .filter(Screenshot.app_name.isnot(None))\
+                  .filter(Screenshot.app_name != "")\
+                  .distinct()\
+                  .order_by(Screenshot.app_name)\
+                  .all()
+    return [name[0] for name in app_names]
 
 if __name__ == "__main__":
     config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=False)
