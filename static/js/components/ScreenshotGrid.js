@@ -130,19 +130,86 @@ const ScreenshotGrid = ({
       {screenshots.pages > 1 && (
         <nav className="mt-4">
           <ul className="pagination justify-content-center">
-            {Array.from({ length: screenshots.pages }, (_, i) => (
-              <li
-                key={i + 1}
-                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+              <button
+                className="page-link"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage === 1}
               >
-                <button
-                  className="page-link"
-                  onClick={() => onPageChange(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              </li>
-            ))}
+                ←
+              </button>
+            </li>
+            {(() => {
+              const pages = [];
+              const totalPages = screenshots.pages;
+
+              // Always add first page
+              pages.push(1);
+
+              // Add ellipsis after first page if needed
+              if (currentPage > 3) {
+                pages.push("...");
+              }
+
+              // Add pages around current page
+              for (
+                let i = Math.max(2, currentPage - 1);
+                i <= Math.min(totalPages - 1, currentPage + 1);
+                i++
+              ) {
+                if (i === currentPage - 1 || i === currentPage || i === currentPage + 1) {
+                  pages.push(i);
+                }
+              }
+
+              // Add ellipsis before last page if needed
+              if (currentPage < totalPages - 2) {
+                pages.push("...");
+              }
+
+              // Always add last page if not already included
+              if (totalPages > 1 && !pages.includes(totalPages)) {
+                pages.push(totalPages);
+              }
+
+              // Remove duplicate ellipsis
+              return pages
+                .filter((page, index, array) => {
+                  if (page === "...") {
+                    return array[index - 1] !== "...";
+                  }
+                  return true;
+                })
+                .map((page, index) =>
+                  page === "..." ? (
+                    <li key={`ellipsis-${index}`} className="page-item disabled">
+                      <span className="page-link">...</span>
+                    </li>
+                  ) : (
+                    <li
+                      key={page}
+                      className={`page-item ${currentPage === page ? "active" : ""}`}
+                    >
+                      <button className="page-link" onClick={() => onPageChange(page)}>
+                        {page}
+                      </button>
+                    </li>
+                  )
+                );
+            })()}
+            <li
+              className={`page-item ${
+                currentPage === screenshots.pages ? "disabled" : ""
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage === screenshots.pages}
+              >
+                →
+              </button>
+            </li>
           </ul>
         </nav>
       )}
