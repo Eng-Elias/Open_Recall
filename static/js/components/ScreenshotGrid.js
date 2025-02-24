@@ -108,7 +108,7 @@ const ScreenshotGrid = ({
           <div key={screenshot.id} className="col-md-4">
             <div className="card screenshot-card">
               <img
-                src={`/assets/${screenshot.file_path}`}
+                src={`/data/screenshots/${screenshot.file_path}`}
                 className="card-img-top"
                 alt="Screenshot"
               />

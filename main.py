@@ -13,9 +13,14 @@ from datetime import datetime
 from typing import List, Optional
 from sqlalchemy import and_, or_, func
 import math
+import os
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
+
+# Ensure screenshots directory exists
+screenshots_dir = os.path.join(os.path.dirname(__file__), "data", "screenshots")
+os.makedirs(screenshots_dir, exist_ok=True)
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
@@ -48,6 +53,7 @@ app = FastAPI(lifespan=lifespan)
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+app.mount("/data/screenshots", StaticFiles(directory=screenshots_dir), name="screenshots")
 
 # Templates
 templates = Jinja2Templates(directory="templates")

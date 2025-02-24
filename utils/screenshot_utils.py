@@ -32,10 +32,10 @@ class ScreenshotManager:
             self._ensure_storage_path()
             self.initialized = True
 
-    def _get_default_storage_path(self) -> str:
+    def _get_default_storage_path(self):
         """Get default storage path based on OS"""
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        return os.path.join(base_dir, 'data', 'screenshots')
+        return os.path.join(base_dir, "data", "screenshots")
 
     def _ensure_storage_path(self):
         """Ensure screenshot storage directory exists"""
@@ -99,7 +99,7 @@ class ScreenshotManager:
             return None
 
     def _save_screenshot(self, image_array: np.ndarray) -> Optional[str]:
-        """Save screenshot and return file path"""
+        """Save screenshot and return filename only"""
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"screenshot_{timestamp}.webp"
@@ -107,9 +107,9 @@ class ScreenshotManager:
             
             image = Image.fromarray(image_array)
             image.save(filepath, format="webp", quality=90, method=6)
-            return filepath
+            return filename  # Return only filename, not full path
         except Exception as e:
-            print(f"Failed to save screenshot: {e}")
+            print(f"Error saving screenshot: {e}")
             return None
 
     def _process_and_save(self):
@@ -124,8 +124,8 @@ class ScreenshotManager:
         if not self._is_significant_change(screenshot_array):
             return
 
-        filepath = self._save_screenshot(screenshot_array)
-        if not filepath:
+        filename = self._save_screenshot(screenshot_array)
+        if not filename:
             return
 
         app_name, window_title = self._get_active_window_info()
@@ -136,7 +136,7 @@ class ScreenshotManager:
         # Save to database
         with next(get_db()) as db:
             screenshot_data = {
-                "file_path": filepath,
+                "file_path": filename,
                 "timestamp": datetime.now(),
                 "app_name": app_name,
                 "window_title": window_title,
