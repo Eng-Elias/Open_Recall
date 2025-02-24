@@ -1,5 +1,6 @@
 const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
-  const [showAppNameSuggestions, setShowAppNameSuggestions] = React.useState(false);
+  const [showAppNameSuggestions, setShowAppNameSuggestions] =
+    React.useState(false);
   const appNameRef = React.useRef(null);
 
   const handleInputChange = (field, value) => {
@@ -28,7 +29,7 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
     }
     // Convert local datetime to UTC ISO string
     const localDate = new Date(value);
-    handleInputChange(field, localDate.toISOString());
+    handleInputChange(field, localDate.toLocaleString());
   };
 
   const handleAppNameClick = (appName) => {
@@ -118,7 +119,9 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
               type="checkbox"
               className="form-check-input"
               checked={filters.isFavorite}
-              onChange={(e) => handleInputChange("isFavorite", e.target.checked)}
+              onChange={(e) =>
+                handleInputChange("isFavorite", e.target.checked)
+              }
               id="favoriteFilter"
             />
             <label className="form-check-label" htmlFor="favoriteFilter">

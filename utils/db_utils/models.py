@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text, ForeignKey, Table, Float
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from .base import Base
 
 # Junction table for Screenshots and Tags (many-to-many)
@@ -9,7 +9,7 @@ screenshot_tags = Table(
     Base.metadata,
     Column('screenshot_id', Integer, ForeignKey('screenshots.id', ondelete='CASCADE'), primary_key=True),
     Column('tag_id', Integer, ForeignKey('tags.id', ondelete='CASCADE'), primary_key=True),
-    Column('tagged_at', DateTime, default=datetime.utcnow)
+    Column('tagged_at', DateTime, default=datetime.now(timezone.utc))
 )
 
 class Screenshot(Base):
@@ -17,7 +17,7 @@ class Screenshot(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     file_path = Column(String, unique=True, index=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    timestamp = Column(DateTime, default=datetime.now(timezone.utc), index=True)
     app_name = Column(String, index=True)
     window_title = Column(String)
     extracted_text = Column(Text)
@@ -53,7 +53,7 @@ class Tag(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
     is_auto_generated = Column(Boolean, default=False)
 
     # Relationship with Screenshots

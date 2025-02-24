@@ -58,8 +58,8 @@ async def read_root(request: Request):
 
 @app.get("/api/screenshots", response_model=Page[ScreenshotResponse])
 async def get_screenshots(
-    start_date: Optional[datetime] = None,
-    end_date: Optional[datetime] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
     app_name: Optional[str] = None,
     is_favorite: Optional[bool] = None,
     tag_ids: Optional[List[int]] = Query(None),
