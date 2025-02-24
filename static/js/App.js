@@ -18,7 +18,7 @@ const App = () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      
+
       // Only add date parameters if they have values
       if (filters.startDate) {
         params.append("start_date", filters.startDate);
@@ -26,7 +26,7 @@ const App = () => {
       if (filters.endDate) {
         params.append("end_date", filters.endDate);
       }
-      
+
       if (filters.appName) {
         params.append("app_name", filters.appName);
       }
@@ -166,9 +166,9 @@ const App = () => {
     <div className="container-fluid py-4">
       <h1 className="mb-4">OpenRecall Screenshots</h1>
 
-      <FilterPanel 
-        filters={filters} 
-        onFilterChange={handleFilterChange} 
+      <FilterPanel
+        filters={filters}
+        onFilterChange={handleFilterChange}
         appNameSuggestions={appNames}
       />
 
@@ -202,5 +202,6 @@ const App = () => {
   );
 };
 
-// Render the App
-ReactDOM.render(<App />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = ReactDOM.createRoot(container);
+root.render(<App tab="home" />);

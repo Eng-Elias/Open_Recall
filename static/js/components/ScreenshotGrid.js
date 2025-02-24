@@ -30,11 +30,15 @@ const ScreenshotGrid = ({
 
     // Add ellipsis after first page if needed
     if (currentPage > 3) {
-      pages.push('...');
+      pages.push("...");
     }
 
     // Add pages around current page
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+    for (
+      let i = Math.max(2, currentPage - 1);
+      i <= Math.min(totalPages - 1, currentPage + 1);
+      i++
+    ) {
       if (i === currentPage - 1 || i === currentPage || i === currentPage + 1) {
         pages.push(i);
       }
@@ -42,7 +46,7 @@ const ScreenshotGrid = ({
 
     // Add ellipsis before last page if needed
     if (currentPage < totalPages - 2) {
-      pages.push('...');
+      pages.push("...");
     }
 
     // Always add last page if not already included
@@ -52,8 +56,8 @@ const ScreenshotGrid = ({
 
     // Remove duplicate ellipsis
     pages = pages.filter((page, index, array) => {
-      if (page === '...') {
-        return array[index - 1] !== '...';
+      if (page === "...") {
+        return array[index - 1] !== "...";
       }
       return true;
     });
@@ -71,7 +75,7 @@ const ScreenshotGrid = ({
             </button>
           </li>
           {pages.map((page, index) =>
-            page === '...' ? (
+            page === "..." ? (
               <li key={`ellipsis-${index}`} className="page-item disabled">
                 <span className="page-link">...</span>
               </li>
