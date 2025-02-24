@@ -1,99 +1,158 @@
 .screenshot-card {
-    height: 100%;
-    position: relative;
+  height: 100%;
+  position: relative;
 }
 
 .screenshot-card .card-img-top {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.screenshot-card .card-body {
+  position: relative;
 }
 
 .favorite-icon {
-    cursor: pointer;
-    font-size: 1.2em;
-    color: #ffc107;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #ffc107;
 }
 
 .tag-badge {
-    cursor: pointer;
-    margin-right: 0.25rem;
-    margin-bottom: 0.25rem;
+  cursor: pointer;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }
 
 .dropdown-menu {
-    z-index: 1050;
+  z-index: 1050;
+}
+
+.screenshot-card .dropdown-menu {
+  position: fixed;
+  z-index: 9999;
 }
 
 /* Pagination styles */
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .page-link {
-    padding: 0.375rem 0.75rem;
-    border-radius: 4px !important;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px !important;
 }
 
 .page-item.active .page-link {
-    background-color: #007bff;
-    border-color: #007bff;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
 .page-item .page-link {
-    min-width: 36px;
-    text-align: center;
+  min-width: 36px;
+  text-align: center;
 }
 
 /* Filter panel styles */
 .filter-panel {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .filter-panel .form-control {
-    max-width: 200px;
+  max-width: 200px;
 }
 
 .app-name-autocomplete {
-    position: relative;
+  position: relative;
 }
 
 .app-name-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-height: 200px;
-    overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .app-name-suggestion {
-    padding: 0.5rem;
-    cursor: pointer;
+  padding: 0.5rem;
+  cursor: pointer;
 }
 
 .app-name-suggestion:hover {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 .screenshots-container {
-    margin-top: 2rem;
+  margin-top: 2rem;
+}
+
+/* Screenshot Modal Styles */
+.modal {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal-body {
+  background-color: #f8f9fa;
+  min-height: 200px;
+  max-height: 75vh;
+}
+
+.navigation-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.navigation-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.navigation-btn:hover {
+  opacity: 1;
+}
+
+.navigation-btn.left {
+  margin-right: auto;
+}
+
+.navigation-btn.right {
+  margin-left: auto;
+}
+
+.screenshot-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.screenshot-card:hover {
+  transform: none;
 }
