@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Query, Depends
+from fastapi import FastAPI, Request, Query, Depends, WebSocket
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
@@ -14,6 +14,7 @@ from typing import List, Optional
 from sqlalchemy import and_, or_, func
 import math
 import os
+from fastapi import HTTPException
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -160,6 +161,97 @@ async def get_app_names(db = Depends(get_db)):
                   .order_by(Screenshot.app_name)\
                   .all()
     return [name[0] for name in app_names]
+
+# WebSocket connection manager
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: dict):
+        for connection in self.active_connections:
+            try:
+                await connection.send_json(message)
+            except:
+                pass
+
+manager = ConnectionManager()
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            await websocket.receive_text()
+    except:
+        manager.disconnect(websocket)
+
+# Update existing endpoints to broadcast changes
+@app.post("/api/toggle-favorite/{screenshot_id}")
+async def toggle_favorite(screenshot_id: int, db = Depends(get_db)):
+    screenshot = db.query(Screenshot).filter(Screenshot.id == screenshot_id).first()
+    if not screenshot:
+        raise HTTPException(status_code=404, detail="Screenshot not found")
+    
+    screenshot.is_favorite = not screenshot.is_favorite
+    db.commit()
+    
+    # Broadcast update
+    await manager.broadcast({
+        "type": "favorite_updated",
+        "screenshot_id": screenshot_id,
+        "is_favorite": screenshot.is_favorite
+    })
+    
+    return {"success": True}
+
+@app.post("/api/add-tag/{screenshot_id}/{tag_id}")
+async def add_tag_to_screenshot(screenshot_id: int, tag_id: int, db = Depends(get_db)):
+    screenshot = db.query(Screenshot).filter(Screenshot.id == screenshot_id).first()
+    tag = db.query(Tag).filter(Tag.id == tag_id).first()
+    
+    if not screenshot or not tag:
+        raise HTTPException(status_code=404, detail="Screenshot or tag not found")
+    
+    if tag not in screenshot.tags:
+        screenshot.tags.append(tag)
+        db.commit()
+        
+        # Broadcast update
+        await manager.broadcast({
+            "type": "tag_added",
+            "screenshot_id": screenshot_id,
+            "tag": {"id": tag.id, "name": tag.name}
+        })
+    
+    return {"success": True}
+
+@app.delete("/api/remove-tag/{screenshot_id}/{tag_id}")
+async def remove_tag_from_screenshot(screenshot_id: int, tag_id: int, db = Depends(get_db)):
+    screenshot = db.query(Screenshot).filter(Screenshot.id == screenshot_id).first()
+    tag = db.query(Tag).filter(Tag.id == tag_id).first()
+    
+    if not screenshot or not tag:
+        raise HTTPException(status_code=404, detail="Screenshot or tag not found")
+    
+    if tag in screenshot.tags:
+        screenshot.tags.remove(tag)
+        db.commit()
+        
+        # Broadcast update
+        await manager.broadcast({
+            "type": "tag_removed",
+            "screenshot_id": screenshot_id,
+            "tag_id": tag_id
+        })
+    
+    return {"success": True}
 
 if __name__ == "__main__":
     config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=False)

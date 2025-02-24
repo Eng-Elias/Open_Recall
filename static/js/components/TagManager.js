@@ -1,4 +1,4 @@
-const TagManager = ({ selectedTags, allTags, onTagSelect, onTagCreate }) => {
+const TagManager = ({ selectedTagIds, allTags, onTagSelect, onTagCreate }) => {
   const [newTagName, setNewTagName] = React.useState("");
 
   const handleCreateTag = async (e) => {
@@ -19,7 +19,9 @@ const TagManager = ({ selectedTags, allTags, onTagSelect, onTagCreate }) => {
               <span
                 key={tag.id}
                 className={`badge ${
-                  selectedTags.includes(tag.id) ? "bg-primary" : "bg-secondary"
+                  selectedTagIds.includes(tag.id)
+                    ? "bg-primary"
+                    : "bg-secondary"
                 } tag-badge`}
                 onClick={() => onTagSelect(tag.id)}
               >

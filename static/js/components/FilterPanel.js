@@ -5,10 +5,7 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
   const appNameRef = React.useRef(null);
 
   const handleInputChange = (field, value) => {
-    onFilterChange({
-      ...filters,
-      [field]: value,
-    });
+    onFilterChange(field, value);
   };
 
   const formatDateTimeForInput = (isoString) => {

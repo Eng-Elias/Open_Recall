@@ -1,5 +1,5 @@
 const ScreenshotModal = ({
-  screenshot,
+  screenshot: initialScreenshot,
   onClose,
   onNext,
   onPrevious,
@@ -10,6 +10,12 @@ const ScreenshotModal = ({
   isFirst,
   isLast,
 }) => {
+  const [screenshot, setScreenshot] = React.useState(initialScreenshot);
+
+  React.useEffect(() => {
+    setScreenshot(initialScreenshot);
+  }, [initialScreenshot]);
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
@@ -22,6 +28,31 @@ const ScreenshotModal = ({
     } else if (e.key === "Escape") {
       onClose();
     }
+  };
+
+  const handleToggleFavorite = async () => {
+    await onToggleFavorite(screenshot.id);
+    setScreenshot(prev => ({
+      ...prev,
+      is_favorite: !prev.is_favorite
+    }));
+  };
+
+  const handleAddTag = async (tagId) => {
+    const tag = allTags.find(t => t.id === tagId);
+    await onAddTag(screenshot.id, tagId);
+    setScreenshot(prev => ({
+      ...prev,
+      tags: [...prev.tags, tag]
+    }));
+  };
+
+  const handleRemoveTag = async (tagId) => {
+    await onRemoveTag(screenshot.id, tagId);
+    setScreenshot(prev => ({
+      ...prev,
+      tags: prev.tags.filter(t => t.id !== tagId)
+    }));
   };
 
   React.useEffect(() => {
@@ -49,7 +80,7 @@ const ScreenshotModal = ({
                     <span
                       key={tag.id}
                       className="badge bg-secondary me-1"
-                      onClick={() => onRemoveTag(screenshot.id, tag.id)}
+                      onClick={() => handleRemoveTag(tag.id)}
                       style={{ cursor: "pointer" }}
                     >
                       {tag.name} ×
@@ -73,7 +104,7 @@ const ScreenshotModal = ({
                           <li key={tag.id}>
                             <button
                               className="dropdown-item"
-                              onClick={() => onAddTag(screenshot.id, tag.id)}
+                              onClick={() => handleAddTag(tag.id)}
                             >
                               {tag.name}
                             </button>
@@ -84,7 +115,7 @@ const ScreenshotModal = ({
                 </div>
                 <span
                   className="favorite-icon"
-                  onClick={() => onToggleFavorite(screenshot.id)}
+                  onClick={handleToggleFavorite}
                   style={{ cursor: "pointer" }}
                 >
                   {screenshot.is_favorite ? "★" : "☆"}

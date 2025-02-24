@@ -1,202 +1,267 @@
 const App = () => {
-  const [screenshots, setScreenshots] = React.useState(null);
-  const [allTags, setAllTags] = React.useState([]);
-  const [appNames, setAppNames] = React.useState([]);
+  const [screenshots, setScreenshots] = React.useState({
+    items: [],
+    page: 1,
+    pages: 1,
+  });
   const [filters, setFilters] = React.useState({
     startDate: "",
     endDate: "",
     appName: "",
     isFavorite: false,
-    selectedTags: [],
+    tagIds: [],
     searchText: "",
-    page: 1,
   });
-  const [loading, setLoading] = React.useState(true);
+  console.log(filters);
+  const [allTags, setAllTags] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [appNameSuggestions, setAppNameSuggestions] = React.useState([]);
+  const [ws, setWs] = React.useState(null);
 
-  // Fetch screenshots with current filters
-  const fetchScreenshots = async () => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
+  // Check if a screenshot matches current filters
+  const matchesFilters = (screenshot) => {
+    // App name filter
+    if (
+      filters.appName &&
+      !screenshot.app_name
+        ?.toLowerCase()
+        .includes(filters.appName.toLowerCase())
+    ) {
+      return false;
+    }
 
-      // Only add date parameters if they have values
+    // Favorite filter
+    if (filters.isFavorite && !screenshot.is_favorite) {
+      return false;
+    }
+
+    // Date range filter
+    if (filters.startDate || filters.endDate) {
+      const screenshotDate = new Date(screenshot.timestamp);
       if (filters.startDate) {
-        params.append("start_date", filters.startDate);
+        const startDate = new Date(filters.startDate);
+        if (screenshotDate < startDate) return false;
       }
       if (filters.endDate) {
-        params.append("end_date", filters.endDate);
+        const endDate = new Date(filters.endDate);
+        endDate.setHours(23, 59, 59, 999); // End of day
+        if (screenshotDate > endDate) return false;
       }
-
-      if (filters.appName) {
-        params.append("app_name", filters.appName);
-      }
-      if (filters.isFavorite) {
-        params.append("is_favorite", true);
-      }
-      if (filters.selectedTags.length > 0) {
-        filters.selectedTags.forEach((tagId) => {
-          params.append("tag_ids", tagId);
-        });
-      }
-      if (filters.searchText) {
-        params.append("search_text", filters.searchText);
-      }
-      params.append("page", filters.page);
-
-      const response = await fetch(`/api/screenshots?${params.toString()}`);
-      const data = await response.json();
-      setScreenshots(data);
-    } catch (error) {
-      console.error("Error fetching screenshots:", error);
-    } finally {
-      setLoading(false);
     }
+
+    // Tag filter
+    if (filters.tagIds.length > 0) {
+      const screenshotTagIds = screenshot.tags.map((tag) => tag.id);
+      if (!filters.tagIds.every((tagId) => screenshotTagIds.includes(tagId))) {
+        return false;
+      }
+    }
+
+    // Search text filter
+    if (filters.searchText) {
+      const searchLower = filters.searchText.toLowerCase();
+      const textMatch =
+        screenshot.app_name?.toLowerCase().includes(searchLower) ||
+        screenshot.window_title?.toLowerCase().includes(searchLower) ||
+        screenshot.extracted_text?.toLowerCase().includes(searchLower);
+      if (!textMatch) return false;
+    }
+
+    return true;
+  };
+
+  // WebSocket setup
+  React.useEffect(() => {
+    const websocket = new WebSocket(`ws://${window.location.host}/ws`);
+
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      switch (data.type) {
+        case "favorite_updated":
+          setScreenshots((prev) => {
+            const updatedItems = prev.items.map((screenshot) =>
+              screenshot.id === data.screenshot_id
+                ? { ...screenshot, is_favorite: data.is_favorite }
+                : screenshot
+            );
+            return {
+              ...prev,
+              items: updatedItems.filter(matchesFilters),
+            };
+          });
+          break;
+
+        case "tag_added":
+          setScreenshots((prev) => {
+            const updatedItems = prev.items.map((screenshot) =>
+              screenshot.id === data.screenshot_id
+                ? {
+                    ...screenshot,
+                    tags: [...screenshot.tags, data.tag],
+                  }
+                : screenshot
+            );
+            return {
+              ...prev,
+              items: updatedItems.filter(matchesFilters),
+            };
+          });
+          break;
+
+        case "tag_removed":
+          setScreenshots((prev) => {
+            const updatedItems = prev.items.map((screenshot) =>
+              screenshot.id === data.screenshot_id
+                ? {
+                    ...screenshot,
+                    tags: screenshot.tags.filter(
+                      (tag) => tag.id !== data.tag_id
+                    ),
+                  }
+                : screenshot
+            );
+            return {
+              ...prev,
+              items: updatedItems.filter(matchesFilters),
+            };
+          });
+          break;
+
+        case "new_screenshot":
+          if (matchesFilters(data.screenshot)) {
+            setScreenshots((prev) => ({
+              ...prev,
+              items: [data.screenshot, ...prev.items].slice(
+                0,
+                prev.items.length
+              ),
+              total: prev.total + 1,
+              pages: Math.ceil((prev.total + 1) / 12),
+            }));
+          }
+          break;
+      }
+    };
+
+    setWs(websocket);
+    return () => websocket.close();
+  }, [filters]); // Re-establish connection when filters change
+
+  const fetchScreenshots = async (page = currentPage) => {
+    const params = new URLSearchParams({
+      page: page,
+      size: 12,
+      ...(filters.startDate && { start_date: filters.startDate }),
+      ...(filters.endDate && { end_date: filters.endDate }),
+      ...(filters.appName && { app_name: filters.appName }),
+      ...(filters.isFavorite && { is_favorite: filters.isFavorite }),
+      ...(filters.searchText && { search_text: filters.searchText }),
+    });
+
+    if (filters.tagIds.length > 0) {
+      filters.tagIds.forEach((id) => params.append("tag_ids", id));
+    }
+
+    const response = await fetch(`/api/screenshots?${params}`);
+    const data = await response.json();
+    setScreenshots(data);
   };
 
   const fetchTags = async () => {
-    try {
-      const response = await fetch("/api/tags");
-      const data = await response.json();
-      setAllTags(data);
-    } catch (error) {
-      console.error("Error fetching tags:", error);
-    }
+    const response = await fetch("/api/tags");
+    const data = await response.json();
+    setAllTags(data);
   };
 
   const fetchAppNames = async () => {
-    try {
-      const response = await fetch("/api/app-names");
-      const data = await response.json();
-      setAppNames(data);
-    } catch (error) {
-      console.error("Error fetching app names:", error);
-    }
+    const response = await fetch("/api/app-names");
+    const data = await response.json();
+    setAppNameSuggestions(data);
   };
 
   React.useEffect(() => {
+    fetchScreenshots();
     fetchTags();
     fetchAppNames();
   }, []);
 
   React.useEffect(() => {
     fetchScreenshots();
-  }, [filters]);
+  }, [filters, currentPage]);
 
-  const handleFilterChange = (newFilters) => {
-    setFilters({ ...newFilters, page: 1 }); // Reset to page 1 when filters change
+  const handleFilterChange = (name, value) => {
+    console.log(name, value);
+    setFilters((prev) => ({ ...prev, [name]: value }));
+    setCurrentPage(1);
   };
 
-  const handlePageChange = (newPage) => {
-    setFilters({ ...filters, page: newPage });
-  };
-
-  const handleTagSelect = (tagId) => {
-    const selectedTags = filters.selectedTags.includes(tagId)
-      ? filters.selectedTags.filter((id) => id !== tagId)
-      : [...filters.selectedTags, tagId];
-    setFilters({ ...filters, selectedTags, page: 1 }); // Reset to page 1 when tags change
-  };
-
-  const handleTagCreate = async (tagName) => {
-    try {
-      const response = await fetch("/api/tags", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: tagName }),
-      });
-      if (response.ok) {
-        fetchTags();
-      }
-    } catch (error) {
-      console.error("Error creating tag:", error);
-    }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const handleToggleFavorite = async (screenshotId) => {
     try {
-      const response = await fetch(
-        `/api/screenshots/${screenshotId}/favorite`,
-        {
-          method: "PUT",
-        }
-      );
-      if (response.ok) {
-        fetchScreenshots();
-      }
+      await fetch(`/api/toggle-favorite/${screenshotId}`, {
+        method: "POST",
+      });
     } catch (error) {
       console.error("Error toggling favorite:", error);
     }
   };
 
-  // Add tag to screenshot
   const handleAddTag = async (screenshotId, tagId) => {
     try {
-      const response = await fetch(
-        `/api/screenshots/${screenshotId}/tags/${tagId}`,
-        {
-          method: "POST",
-        }
-      );
-      if (response.ok) {
-        fetchScreenshots();
-      }
+      await fetch(`/api/add-tag/${screenshotId}/${tagId}`, {
+        method: "POST",
+      });
     } catch (error) {
       console.error("Error adding tag:", error);
     }
   };
 
-  // Remove tag from screenshot
   const handleRemoveTag = async (screenshotId, tagId) => {
     try {
-      const response = await fetch(
-        `/api/screenshots/${screenshotId}/tags/${tagId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (response.ok) {
-        fetchScreenshots();
-      }
+      await fetch(`/api/remove-tag/${screenshotId}/${tagId}`, {
+        method: "DELETE",
+      });
     } catch (error) {
       console.error("Error removing tag:", error);
     }
   };
 
   return (
-    <div className="container-fluid py-4">
-      <h1 className="mb-4">OpenRecall Screenshots</h1>
-
-      <FilterPanel
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        appNameSuggestions={appNames}
-      />
-
-      <TagManager
-        selectedTags={filters.selectedTags}
-        allTags={allTags}
-        onTagSelect={handleTagSelect}
-        onTagCreate={handleTagCreate}
-      />
-
-      <div className="screenshots-container">
-        {loading ? (
-          <div className="loading-spinner">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        ) : (
+    <div className="container-fluid">
+      <div className="mb-4">
+        <FilterPanel
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          appNameSuggestions={appNameSuggestions}
+        />
+        <TagManager
+          allTags={allTags}
+          onTagsUpdate={fetchTags}
+          selectedTagIds={filters.tagIds}
+          onTagSelect={(tagId) => {
+            const newTagIds = filters.tagIds.includes(tagId)
+              ? filters.tagIds.filter((id) => id !== tagId)
+              : [...filters.tagIds, tagId];
+            handleFilterChange("tagIds", newTagIds);
+          }}
+        />
+      </div>
+      <div className="row">
+        <div className="col-12">
           <ScreenshotGrid
             screenshots={screenshots}
             allTags={allTags}
             onToggleFavorite={handleToggleFavorite}
             onAddTag={handleAddTag}
             onRemoveTag={handleRemoveTag}
-            currentPage={filters.page}
+            currentPage={currentPage}
             onPageChange={handlePageChange}
           />
-        )}
+        </div>
       </div>
     </div>
   );
@@ -204,4 +269,4 @@ const App = () => {
 
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
-root.render(<App tab="home" />);
+root.render(<App />);
