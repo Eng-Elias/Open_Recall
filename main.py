@@ -122,6 +122,30 @@ async def create_tag(tag: TagCreate, db = Depends(get_db)):
     db.refresh(db_tag)
     return db_tag
 
+@app.delete("/api/tags/{tag_id}")
+async def delete_tag(tag_id: int, db = Depends(get_db)):
+    tag = db.query(Tag).filter(Tag.id == tag_id).first()
+    if not tag:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    
+    # Check if tag is used by any screenshots
+    if tag.screenshots:
+        # Remove the tag from all screenshots
+        for screenshot in tag.screenshots:
+            screenshot.tags.remove(tag)
+    
+    # Delete the tag
+    db.delete(tag)
+    db.commit()
+    
+    # Broadcast update
+    await manager.broadcast({
+        "type": "tag_deleted",
+        "tag_id": tag_id
+    })
+    
+    return {"success": True}
+
 @app.put("/api/screenshots/{screenshot_id}/favorite")
 async def toggle_favorite(screenshot_id: int, db = Depends(get_db)):
     screenshot = db.query(Screenshot).filter(Screenshot.id == screenshot_id).first()

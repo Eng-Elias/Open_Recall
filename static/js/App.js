@@ -240,6 +240,29 @@ const App = () => {
     }
   };
 
+  const handleDeleteTag = async (tagId) => {
+    try {
+      // First check if the tag is selected in filters
+      if (filters.tagIds.includes(tagId)) {
+        // Remove it from filters first
+        const newTagIds = filters.tagIds.filter(id => id !== tagId);
+        handleFilterChange("tagIds", newTagIds);
+      }
+      
+      const response = await fetch(`/api/tags/${tagId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete tag");
+      }
+      
+      // Refresh the tags list
+      await fetchTags();
+    } catch (error) {
+      console.error("Error deleting tag:", error);
+    }
+  };
+
   return (
     <div className="container-fluid">
       <div className="mb-4">
@@ -258,6 +281,7 @@ const App = () => {
               : [...filters.tagIds, tagId];
             handleFilterChange("tagIds", newTagIds);
           }}
+          onDeleteTag={handleDeleteTag}
         />
       </div>
       <div className="row">
