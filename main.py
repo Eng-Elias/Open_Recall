@@ -80,9 +80,19 @@ async def get_screenshots(
     
     # Apply filters
     if start_date:
-        query = query.filter(Screenshot.timestamp >= start_date)
+        try:
+            start_datetime = datetime.fromisoformat(start_date)
+            query = query.filter(Screenshot.timestamp >= start_datetime)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid start_date format")
+            
     if end_date:
-        query = query.filter(Screenshot.timestamp <= end_date)
+        try:
+            end_datetime = datetime.fromisoformat(end_date)
+            query = query.filter(Screenshot.timestamp <= end_datetime)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid end_date format")
+            
     if app_name:
         query = query.filter(Screenshot.app_name == app_name)
     if is_favorite is not None:

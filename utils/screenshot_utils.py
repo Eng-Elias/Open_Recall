@@ -1,7 +1,7 @@
 import os
 import time
 import threading
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 import mss
 import numpy as np
@@ -137,7 +137,7 @@ class ScreenshotManager:
         with next(get_db()) as db:
             screenshot_data = {
                 "file_path": filename,
-                "timestamp": datetime.now(),
+                "timestamp": datetime.now(timezone.utc),
                 "app_name": app_name,
                 "window_title": window_title,
                 "extracted_text": extracted_text,

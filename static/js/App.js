@@ -245,17 +245,17 @@ const App = () => {
       // First check if the tag is selected in filters
       if (filters.tagIds.includes(tagId)) {
         // Remove it from filters first
-        const newTagIds = filters.tagIds.filter(id => id !== tagId);
+        const newTagIds = filters.tagIds.filter((id) => id !== tagId);
         handleFilterChange("tagIds", newTagIds);
       }
-      
+
       const response = await fetch(`/api/tags/${tagId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         throw new Error("Failed to delete tag");
       }
-      
+
       // Refresh the tags list
       await fetchTags();
     } catch (error) {
@@ -289,7 +289,9 @@ const App = () => {
           }}
           onDeleteTag={handleDeleteTag}
         />
-        <DeleteScreenshotsPanel onScreenshotsDeleted={handleScreenshotsDeleted} />
+        <DeleteScreenshotsPanel
+          onScreenshotsDeleted={handleScreenshotsDeleted}
+        />
       </div>
       <div className="row">
         <div className="col-12">

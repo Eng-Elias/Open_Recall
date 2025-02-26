@@ -27,7 +27,7 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
     }
     // Convert local datetime to UTC ISO string
     const localDate = new Date(value);
-    handleInputChange(field, localDate.toLocaleString());
+    handleInputChange(field, localDate.toISOString());
   };
 
   const handleAppNameChange = (value) => {
