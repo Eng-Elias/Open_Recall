@@ -263,6 +263,12 @@ const App = () => {
     }
   };
 
+  const handleScreenshotsDeleted = async (count) => {
+    // Refresh the screenshots list after deletion
+    await fetchScreenshots(1); // Reset to first page
+    setCurrentPage(1);
+  };
+
   return (
     <div className="container-fluid">
       <div className="mb-4">
@@ -283,6 +289,7 @@ const App = () => {
           }}
           onDeleteTag={handleDeleteTag}
         />
+        <DeleteScreenshotsPanel onScreenshotsDeleted={handleScreenshotsDeleted} />
       </div>
       <div className="row">
         <div className="col-12">

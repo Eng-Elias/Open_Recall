@@ -277,8 +277,61 @@ async def remove_tag_from_screenshot(screenshot_id: int, tag_id: int, db = Depen
     
     return {"success": True}
 
+@app.delete("/api/screenshots/before-date/{date}")
+async def delete_screenshots_before_date(date: str, db = Depends(get_db)):
+    """
+    Delete all screenshots before a specific date.
+    Date format: YYYY-MM-DD
+    """
+    try:
+        # Convert string date to datetime
+        target_date = datetime.fromisoformat(date)
+        
+        # Find all screenshots before the target date
+        screenshots = db.query(Screenshot).filter(Screenshot.timestamp < target_date).all()
+        
+        if not screenshots:
+            return {"success": True, "message": "No screenshots found before this date", "count": 0}
+        
+        count = len(screenshots)
+        
+        # Get the file paths to delete from filesystem
+        file_paths = [screenshot.file_path for screenshot in screenshots if screenshot.file_path]
+        
+        # Delete screenshots from database
+        db.query(Screenshot).filter(Screenshot.timestamp < target_date).delete()
+        db.commit()
+        
+        # Delete the actual files
+        deleted_files = 0
+        for file_path in file_paths:
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    deleted_files += 1
+            except Exception as e:
+                print(f"Error deleting file {file_path}: {e}")
+        
+        # Broadcast update
+        await manager.broadcast({
+            "type": "screenshots_deleted",
+            "count": count
+        })
+        
+        return {
+            "success": True, 
+            "message": f"Deleted {count} screenshots before {date}", 
+            "count": count,
+            "files_deleted": deleted_files
+        }
+        
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting screenshots: {str(e)}")
+
 if __name__ == "__main__":
-    config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=False)
+    config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=True)
     server = uvicorn.Server(config)
     try:
         server.run()
