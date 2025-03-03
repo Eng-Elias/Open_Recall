@@ -16,6 +16,7 @@ const App = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [appNameSuggestions, setAppNameSuggestions] = React.useState([]);
   const [ws, setWs] = React.useState(null);
+  const [selectedScreenshot, setSelectedScreenshot] = React.useState(null);
 
   // Check if a screenshot matches current filters
   const matchesFilters = (screenshot) => {
@@ -189,6 +190,17 @@ const App = () => {
     fetchScreenshots();
   }, [filters, currentPage]);
 
+  // Initialize tooltips when selected screenshot changes
+  React.useEffect(() => {
+    if (selectedScreenshot) {
+      // Initialize tooltips
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    }
+  }, [selectedScreenshot]);
+
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
     setCurrentPage(1);
@@ -304,6 +316,7 @@ const App = () => {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             refetch={() => fetchScreenshots(currentPage)}
+            onSelectScreenshot={(screenshot) => setSelectedScreenshot(screenshot)}
           />
         </div>
       </div>

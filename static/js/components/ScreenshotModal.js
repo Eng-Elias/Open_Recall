@@ -12,9 +12,13 @@ const ScreenshotModal = ({
   refetch,
 }) => {
   const [screenshot, setScreenshot] = React.useState(initialScreenshot);
+  const [showNotesEditor, setShowNotesEditor] = React.useState(false);
+  const [notes, setNotes] = React.useState("");
+  const [isSavingNotes, setIsSavingNotes] = React.useState(false);
 
   React.useEffect(() => {
     setScreenshot(initialScreenshot);
+    setNotes(initialScreenshot?.notes || "");
   }, [initialScreenshot]);
 
   const formatDate = (dateString) => {
@@ -54,6 +58,37 @@ const ScreenshotModal = ({
     });
     refetch();
   };
+  
+  const handleOpenNotesEditor = () => {
+    setShowNotesEditor(true);
+  };
+  
+  const handleCloseNotesEditor = () => {
+    setShowNotesEditor(false);
+  };
+  
+  const handleSaveNotes = async () => {
+    setIsSavingNotes(true);
+    try {
+      const response = await fetch(`/api/screenshots/${screenshot.id}/notes`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ notes }),
+      });
+      
+      if (response.ok) {
+        setScreenshot((prev) => ({ ...prev, notes }));
+        setShowNotesEditor(false);
+        refetch();
+      }
+    } catch (error) {
+      console.error("Error saving notes:", error);
+    } finally {
+      setIsSavingNotes(false);
+    }
+  };
 
   React.useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -75,6 +110,15 @@ const ScreenshotModal = ({
                 <span className="text-muted">
                   {formatDate(screenshot.timestamp)}
                 </span>
+                {screenshot.summary && (
+                  <span 
+                    className="badge bg-info text-white" 
+                    data-bs-toggle="tooltip" 
+                    title={screenshot.summary}
+                  >
+                    Summary
+                  </span>
+                )}
               </div>
               <div className="d-flex align-items-center gap-3">
                 <div className="tags-container">
@@ -114,6 +158,14 @@ const ScreenshotModal = ({
                     </ul>
                   </div>
                 </div>
+                <button 
+                  className="btn btn-sm btn-outline-primary"
+                  onClick={handleOpenNotesEditor}
+                  data-bs-toggle="tooltip"
+                  title={screenshot.notes ? screenshot.notes : "Add notes"}
+                >
+                  {screenshot.notes ? "Edit Notes" : "Add Notes"}
+                </button>
                 <span
                   className="favorite-icon"
                   onClick={handleToggleFavorite}
@@ -154,6 +206,51 @@ const ScreenshotModal = ({
           </div>
         </div>
       </div>
+      
+      {/* Notes Editor Modal */}
+      {showNotesEditor && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Screenshot Notes</h5>
+                <button type="button" className="btn-close" onClick={handleCloseNotesEditor}></button>
+              </div>
+              <div className="modal-body">
+                <textarea
+                  className="form-control"
+                  rows="5"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Add your notes here..."
+                ></textarea>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={handleCloseNotesEditor}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-primary" 
+                  onClick={handleSaveNotes}
+                  disabled={isSavingNotes}
+                >
+                  {isSavingNotes ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Saving...
+                    </>
+                  ) : "Save Notes"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

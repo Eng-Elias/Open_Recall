@@ -7,6 +7,7 @@ const ScreenshotGrid = ({
   currentPage,
   onPageChange,
   refetch,
+  onSelectScreenshot,
 }) => {
   const [selectedScreenshot, setSelectedScreenshot] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
@@ -14,11 +15,17 @@ const ScreenshotGrid = ({
   const handleScreenshotClick = (screenshot, index) => {
     setSelectedScreenshot(screenshot);
     setSelectedIndex(index);
+    if (onSelectScreenshot) {
+      onSelectScreenshot(screenshot);
+    }
   };
 
   const handleCloseModal = () => {
     setSelectedScreenshot(null);
     setSelectedIndex(-1);
+    if (onSelectScreenshot) {
+      onSelectScreenshot(null);
+    }
   };
 
   const handlePrevious = async () => {
