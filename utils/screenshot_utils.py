@@ -11,6 +11,7 @@ import win32process
 import psutil
 from .db_utils import Screenshot, get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
+from .summarization import generate_summary
 
 class ScreenshotManager:
     _instance = None
@@ -133,6 +134,12 @@ class ScreenshotManager:
         # Process OCR
         extracted_text, confidence = process_image_ocr(screenshot_array)
         
+        # Generate summary
+        summary = generate_summary(f"""
+        Active App Name: {app_name}
+        Screenshot Extracted Text: {extracted_text}
+        """)
+        
         # Save to database
         with next(get_db()) as db:
             screenshot_data = {
@@ -141,7 +148,8 @@ class ScreenshotManager:
                 "app_name": app_name,
                 "window_title": window_title,
                 "extracted_text": extracted_text,
-                "confidence_score": float(confidence)
+                "confidence_score": float(confidence),
+                "summary": summary
             }
             screenshot_crud.create(db, data=screenshot_data)
 
