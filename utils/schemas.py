@@ -25,6 +25,8 @@ class ScreenshotResponse(BaseModel):
     extracted_text: str
     confidence_score: float
     is_favorite: bool
+    notes: str | None = None
+    summary: str | None = None
     tags: List[TagResponse]
 
     class Config:
