@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 import uvicorn
 from utils.screenshot_utils import screenshot_manager
 from utils.db_utils import Base, engine, get_db, Screenshot, Tag
-from utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page
+from utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
 from contextlib import asynccontextmanager
 import signal
 import sys
@@ -159,11 +159,51 @@ async def delete_tag(tag_id: int, db = Depends(get_db)):
 @app.put("/api/screenshots/{screenshot_id}/favorite")
 async def toggle_favorite(screenshot_id: int, db = Depends(get_db)):
     screenshot = db.query(Screenshot).filter(Screenshot.id == screenshot_id).first()
-    if screenshot:
-        screenshot.is_favorite = not screenshot.is_favorite
-        db.commit()
-        return {"success": True}
-    return {"success": False}
+    
+    if not screenshot:
+        raise HTTPException(status_code=404, detail="Screenshot not found")
+    
+    screenshot.is_favorite = not screenshot.is_favorite
+    db.commit()
+    
+    # Broadcast update
+    await manager.broadcast({
+        "type": "favorite_updated",
+        "screenshot_id": screenshot_id,
+        "is_favorite": screenshot.is_favorite
+    })
+    
+    return {"success": True, "is_favorite": screenshot.is_favorite}
+
+class NotesUpdate(BaseModel):
+    notes: str
+
+@app.put("/api/screenshots/{screenshot_id}/notes")
+async def update_notes(screenshot_id: int, notes_data: NotesUpdate, db = Depends(get_db)):
+    screenshot = db.query(Screenshot).filter(Screenshot.id == screenshot_id).first()
+    
+    if not screenshot:
+        raise HTTPException(status_code=404, detail="Screenshot not found")
+    
+    screenshot.notes = notes_data.notes
+    db.commit()
+    
+    # Broadcast update
+    await manager.broadcast({
+        "type": "notes_updated",
+        "screenshot_id": screenshot_id,
+        "notes": screenshot.notes
+    })
+    
+    return {"success": True, "notes": screenshot.notes}
+
+@app.post("/api/tags", response_model=TagResponse)
+async def create_tag(tag: TagCreate, db = Depends(get_db)):
+    db_tag = Tag(name=tag.name)
+    db.add(db_tag)
+    db.commit()
+    db.refresh(db_tag)
+    return db_tag
 
 @app.post("/api/screenshots/{screenshot_id}/tags/{tag_id}")
 async def add_tag_to_screenshot(screenshot_id: int, tag_id: int, db = Depends(get_db)):
