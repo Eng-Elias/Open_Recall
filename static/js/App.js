@@ -141,6 +141,11 @@ const App = () => {
             }));
           }
           break;
+
+        case "settings_updated":
+          // Handle settings update if needed
+          console.log("Settings updated:", data.settings);
+          break;
       }
     };
 
@@ -194,7 +199,9 @@ const App = () => {
   React.useEffect(() => {
     if (selectedScreenshot) {
       // Initialize tooltips
-      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      const tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      );
       tooltipTriggerList.forEach(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
@@ -284,10 +291,9 @@ const App = () => {
   return (
     <div className="container-fluid">
       <div className="mb-4">
-        <FilterPanel
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          appNameSuggestions={appNameSuggestions}
+        <SettingsPanel />
+        <DeleteScreenshotsPanel
+          onScreenshotsDeleted={handleScreenshotsDeleted}
         />
         <TagManager
           allTags={allTags}
@@ -301,8 +307,10 @@ const App = () => {
           }}
           onDeleteTag={handleDeleteTag}
         />
-        <DeleteScreenshotsPanel
-          onScreenshotsDeleted={handleScreenshotsDeleted}
+        <FilterPanel
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          appNameSuggestions={appNameSuggestions}
         />
       </div>
       <div className="row">
@@ -316,7 +324,9 @@ const App = () => {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             refetch={() => fetchScreenshots(currentPage)}
-            onSelectScreenshot={(screenshot) => setSelectedScreenshot(screenshot)}
+            onSelectScreenshot={(screenshot) =>
+              setSelectedScreenshot(screenshot)
+            }
           />
         </div>
       </div>

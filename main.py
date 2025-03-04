@@ -5,13 +5,14 @@ import uvicorn
 from utils.screenshot_utils import screenshot_manager
 from utils.db_utils import Base, engine, get_db, Screenshot, Tag
 from utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
+from utils.settings import settings_manager
 from contextlib import asynccontextmanager
 import signal
 import sys
 import multiprocessing
 from datetime import datetime
 from typing import List, Optional
-from sqlalchemy import and_, or_, func
+from sqlalchemy import or_, func
 import math
 import os
 from fastapi import HTTPException
@@ -421,6 +422,48 @@ async def delete_screenshots_before_date(
         raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error deleting screenshots: {str(e)}")
+
+# Add API endpoints for settings
+@app.get("/api/settings")
+async def get_settings():
+    """Get all application settings"""
+    return settings_manager.get_all_settings()
+
+class SettingsUpdate(BaseModel):
+    enable_summarization: Optional[bool] = None
+    capture_interval: Optional[int] = None
+
+@app.put("/api/settings")
+async def update_settings(settings: SettingsUpdate):
+    """Update application settings"""
+    settings_dict = {k: v for k, v in settings.dict().items() if v is not None}
+    
+    if not settings_dict:
+        raise HTTPException(status_code=400, detail="No settings provided")
+    
+    # Validate capture_interval if provided
+    if "capture_interval" in settings_dict and settings_dict["capture_interval"] < 10:
+        raise HTTPException(status_code=400, detail="Capture interval must be at least 10 seconds")
+    
+    # Update settings
+    success = settings_manager.update_settings(settings_dict)
+    
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to update settings")
+    
+    # Update screenshot manager's capture interval if it was changed
+    if "capture_interval" in settings_dict:
+        screenshot_manager.capture_interval = settings_dict["capture_interval"]
+        screenshot_manager.stop()
+        screenshot_manager.start()
+    
+    # Broadcast settings update
+    await manager.broadcast({
+        "type": "settings_updated",
+        "settings": settings_manager.get_all_settings()
+    })
+    
+    return {"success": True, "settings": settings_manager.get_all_settings()}
 
 if __name__ == "__main__":
     config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=True)

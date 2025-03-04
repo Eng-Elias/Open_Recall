@@ -9,9 +9,10 @@ from PIL import Image
 import win32gui
 import win32process
 import psutil
-from .db_utils import Screenshot, get_db, screenshot_crud
+from .db_utils import get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
 from .summarization import generate_summary
+from .settings import BASE_DIR, settings_manager
 
 class ScreenshotManager:
     _instance = None
@@ -23,10 +24,11 @@ class ScreenshotManager:
                 cls._instance = super().__new__(cls)
             return cls._instance
 
-    def __init__(self, storage_path: str = None, capture_interval: int = 60):
+    def __init__(self, storage_path: str = None, capture_interval: int = None):
         if not hasattr(self, 'initialized'):
             self.storage_path = storage_path or self._get_default_storage_path()
-            self.capture_interval = capture_interval
+            # Get capture interval from settings or use default
+            self.capture_interval = capture_interval or settings_manager.get_setting("capture_interval", 300)
             self.last_screenshot = None
             self.is_running = False
             self.thread = None
@@ -35,8 +37,7 @@ class ScreenshotManager:
 
     def _get_default_storage_path(self):
         """Get default storage path based on OS"""
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        return os.path.join(base_dir, "data", "screenshots")
+        return os.path.join(BASE_DIR, "data", "screenshots")
 
     def _ensure_storage_path(self):
         """Ensure screenshot storage directory exists"""
@@ -134,11 +135,13 @@ class ScreenshotManager:
         # Process OCR
         extracted_text, confidence = process_image_ocr(screenshot_array)
         
-        # Generate summary
-        summary = generate_summary(f"""
-        Active App Name: {app_name}
-        Screenshot Extracted Text: {extracted_text}
-        """)
+        # Generate summary only if enabled in settings
+        summary = ""
+        if settings_manager.get_setting("enable_summarization", False):
+            summary = generate_summary(f"""
+            Active App Name: {app_name}
+            Screenshot Extracted Text: {extracted_text}
+            """)
         
         # Save to database
         with next(get_db()) as db:
