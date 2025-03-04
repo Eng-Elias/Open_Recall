@@ -19,7 +19,7 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
 
   const fetchTags = async () => {
     try {
-      const response = await fetch('/api/tags');
+      const response = await fetch("/api/tags");
       if (response.ok) {
         const data = await response.json();
         setTags(data);
@@ -37,37 +37,40 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate date
     if (!date) {
       setError("Please select a date");
       return;
     }
-    
+
     // Show confirmation dialog
     setShowConfirm(true);
   };
-  
+
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     setError(null);
     setResult(null);
-    
+
     try {
       // Build query parameters
       const params = new URLSearchParams();
-      if (excludeFavorites) params.append('exclude_favorites', 'true');
-      if (excludeWithNotes) params.append('exclude_with_notes', 'true');
-      if (selectedTagId) params.append('tag_id', selectedTagId);
-      
-      const queryString = params.toString() ? `?${params.toString()}` : '';
-      
-      const response = await fetch(`/api/screenshots/before-date/${date}${queryString}`, {
-        method: "DELETE"
-      });
-      
+      if (excludeFavorites) params.append("exclude_favorites", "true");
+      if (excludeWithNotes) params.append("exclude_with_notes", "true");
+      if (selectedTagId) params.append("tag_id", selectedTagId);
+
+      const queryString = params.toString() ? `?${params.toString()}` : "";
+
+      const response = await fetch(
+        `/api/screenshots/before-date/${date}${queryString}`,
+        {
+          method: "DELETE",
+        }
+      );
+
       const data = await response.json();
-      
+
       if (response.ok) {
         setResult(data);
         if (onScreenshotsDeleted) {
@@ -84,32 +87,39 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
       setShowConfirm(false);
     }
   };
-  
+
   const handleCancelDelete = () => {
     setShowConfirm(false);
   };
-  
+
   const togglePanel = () => {
     setIsExpanded(!isExpanded);
   };
 
   return (
     <div className="card mb-4">
-      <div className="card-header" onClick={togglePanel} style={{ cursor: 'pointer' }}>
+      <div
+        className="card-header"
+        onClick={togglePanel}
+        style={{ cursor: "pointer" }}
+      >
         <div className="d-flex justify-content-between align-items-center">
           <h5 className="mb-0">
-            <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} me-2`}></i>
+            <i
+              className={`bi bi-chevron-${isExpanded ? "down" : "right"} me-2`}
+            ></i>
             Delete Old Screenshots
           </h5>
         </div>
       </div>
-      
+
       {isExpanded && (
         <div className="card-body">
           <p className="card-text text-muted">
-            Delete all screenshots taken before a specific date. This action cannot be undone.
+            Delete all screenshots taken before a specific date. This action
+            cannot be undone.
           </p>
-          
+
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="delete-date" className="form-label">
@@ -125,7 +135,7 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
               />
               {error && <div className="invalid-feedback">{error}</div>}
             </div>
-            
+
             <div className="mb-3">
               <div className="form-check">
                 <input
@@ -140,7 +150,7 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
                 </label>
               </div>
             </div>
-            
+
             <div className="mb-3">
               <div className="form-check">
                 <input
@@ -150,12 +160,15 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
                   checked={excludeWithNotes}
                   onChange={(e) => setExcludeWithNotes(e.target.checked)}
                 />
-                <label className="form-check-label" htmlFor="exclude-with-notes">
+                <label
+                  className="form-check-label"
+                  htmlFor="exclude-with-notes"
+                >
                   Exclude screenshots with notes
                 </label>
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="tag-filter" className="form-label">
                 Only delete screenshots with tag:
@@ -167,14 +180,14 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
                 onChange={(e) => setSelectedTagId(e.target.value)}
               >
                 <option value="">All tags (no filter)</option>
-                {tags.map(tag => (
+                {tags.map((tag) => (
                   <option key={tag.id} value={tag.id}>
                     {tag.name}
                   </option>
                 ))}
               </select>
             </div>
-            
+
             <button
               type="submit"
               className="btn btn-danger"
@@ -183,7 +196,7 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
               Delete Screenshots
             </button>
           </form>
-          
+
           {result && (
             <div className="alert alert-success mt-3">
               {result.message} ({result.files_deleted} files removed from disk)
@@ -191,14 +204,14 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
           )}
         </div>
       )}
-      
+
       {/* Confirmation Modal - Using Bootstrap's modal with proper event handling */}
       {showConfirm && (
-        <div 
-          className="modal" 
-          tabIndex="-1" 
-          role="dialog" 
-          style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
+        <div
+          className="modal"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
         >
           <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -212,13 +225,30 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
                 ></button>
               </div>
               <div className="modal-body">
-                <p>Are you sure you want to delete all screenshots taken before {date}?</p>
                 <p>
-                  {excludeFavorites && <span className="d-block">• Favorite screenshots will be kept</span>}
-                  {excludeWithNotes && <span className="d-block">• Screenshots with notes will be kept</span>}
-                  {selectedTagId && <span className="d-block">• Only screenshots with the selected tag will be deleted</span>}
+                  Are you sure you want to delete all screenshots taken before{" "}
+                  {date}?
                 </p>
-                <p className="text-danger fw-bold">This action cannot be undone!</p>
+                <p>
+                  {excludeFavorites && (
+                    <span className="d-block">
+                      • Favorite screenshots will be kept
+                    </span>
+                  )}
+                  {excludeWithNotes && (
+                    <span className="d-block">
+                      • Screenshots with notes will be kept
+                    </span>
+                  )}
+                  {selectedTagId && (
+                    <span className="d-block">
+                      • Only screenshots with the selected tag will be deleted
+                    </span>
+                  )}
+                </p>
+                <p className="text-danger fw-bold">
+                  This action cannot be undone!
+                </p>
               </div>
               <div className="modal-footer">
                 <button
@@ -237,7 +267,11 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
                 >
                   {isDeleting ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Deleting...
                     </>
                   ) : (
