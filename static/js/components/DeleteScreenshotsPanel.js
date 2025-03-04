@@ -5,6 +5,29 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
   const [result, setResult] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [excludeFavorites, setExcludeFavorites] = React.useState(false);
+  const [excludeWithNotes, setExcludeWithNotes] = React.useState(false);
+  const [selectedTagId, setSelectedTagId] = React.useState("");
+  const [tags, setTags] = React.useState([]);
+
+  // Fetch tags when component mounts
+  React.useEffect(() => {
+    if (isExpanded) {
+      fetchTags();
+    }
+  }, [isExpanded]);
+
+  const fetchTags = async () => {
+    try {
+      const response = await fetch('/api/tags');
+      if (response.ok) {
+        const data = await response.json();
+        setTags(data);
+      }
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+    }
+  };
 
   const handleDateChange = (e) => {
     setDate(e.target.value);
@@ -31,7 +54,15 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
     setResult(null);
     
     try {
-      const response = await fetch(`/api/screenshots/before-date/${date}`, {
+      // Build query parameters
+      const params = new URLSearchParams();
+      if (excludeFavorites) params.append('exclude_favorites', 'true');
+      if (excludeWithNotes) params.append('exclude_with_notes', 'true');
+      if (selectedTagId) params.append('tag_id', selectedTagId);
+      
+      const queryString = params.toString() ? `?${params.toString()}` : '';
+      
+      const response = await fetch(`/api/screenshots/before-date/${date}${queryString}`, {
         method: "DELETE"
       });
       
@@ -95,6 +126,55 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
               {error && <div className="invalid-feedback">{error}</div>}
             </div>
             
+            <div className="mb-3">
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="exclude-favorites"
+                  checked={excludeFavorites}
+                  onChange={(e) => setExcludeFavorites(e.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="exclude-favorites">
+                  Exclude favorite screenshots
+                </label>
+              </div>
+            </div>
+            
+            <div className="mb-3">
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="exclude-with-notes"
+                  checked={excludeWithNotes}
+                  onChange={(e) => setExcludeWithNotes(e.target.checked)}
+                />
+                <label className="form-check-label" htmlFor="exclude-with-notes">
+                  Exclude screenshots with notes
+                </label>
+              </div>
+            </div>
+            
+            <div className="mb-3">
+              <label htmlFor="tag-filter" className="form-label">
+                Only delete screenshots with tag:
+              </label>
+              <select
+                id="tag-filter"
+                className="form-select"
+                value={selectedTagId}
+                onChange={(e) => setSelectedTagId(e.target.value)}
+              >
+                <option value="">All tags (no filter)</option>
+                {tags.map(tag => (
+                  <option key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
             <button
               type="submit"
               className="btn btn-danger"
@@ -133,6 +213,11 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
               </div>
               <div className="modal-body">
                 <p>Are you sure you want to delete all screenshots taken before {date}?</p>
+                <p>
+                  {excludeFavorites && <span className="d-block">• Favorite screenshots will be kept</span>}
+                  {excludeWithNotes && <span className="d-block">• Screenshots with notes will be kept</span>}
+                  {selectedTagId && <span className="d-block">• Only screenshots with the selected tag will be deleted</span>}
+                </p>
                 <p className="text-danger fw-bold">This action cannot be undone!</p>
               </div>
               <div className="modal-footer">

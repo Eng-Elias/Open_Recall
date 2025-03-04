@@ -328,20 +328,48 @@ async def remove_tag_from_screenshot(screenshot_id: int, tag_id: int, db = Depen
     return {"success": True}
 
 @app.delete("/api/screenshots/before-date/{date}")
-async def delete_screenshots_before_date(date: str, db = Depends(get_db)):
+async def delete_screenshots_before_date(
+    date: str, 
+    exclude_favorites: bool = Query(False),
+    exclude_with_notes: bool = Query(False),
+    tag_id: Optional[int] = Query(None),
+    db = Depends(get_db)
+):
     """
     Delete all screenshots before a specific date.
     Date format: YYYY-MM-DD
+    
+    Optional filters:
+    - exclude_favorites: If true, favorite screenshots will be kept
+    - exclude_with_notes: If true, screenshots with notes will be kept
+    - tag_id: If provided, only screenshots with this tag will be deleted
     """
     try:
         # Convert string date to datetime
         target_date = datetime.fromisoformat(date)
         
-        # Find all screenshots before the target date
-        screenshots = db.query(Screenshot).filter(Screenshot.timestamp < target_date).all()
+        # Start with base query for screenshots before the target date
+        query = db.query(Screenshot).filter(Screenshot.timestamp < target_date)
+        
+        # Apply additional filters
+        if exclude_favorites:
+            query = query.filter(Screenshot.is_favorite == False)
+            
+        if exclude_with_notes:
+            query = query.filter(or_(
+                Screenshot.notes == None,
+                Screenshot.notes == "",
+                func.length(Screenshot.notes) == 0
+            ))
+            
+        if tag_id:
+            query = query.filter(Screenshot.tags.any(Tag.id == tag_id))
+        
+        # Get all matching screenshots
+        screenshots = query.all()
         
         if not screenshots:
-            return {"success": True, "message": "No screenshots found before this date", "count": 0}
+            return {"success": True, "message": "No screenshots found matching your criteria", "count": 0}
         
         count = len(screenshots)
         
@@ -349,7 +377,8 @@ async def delete_screenshots_before_date(date: str, db = Depends(get_db)):
         file_paths = [screenshot.file_path for screenshot in screenshots if screenshot.file_path]
         
         # Delete screenshots from database
-        db.query(Screenshot).filter(Screenshot.timestamp < target_date).delete()
+        for screenshot in screenshots:
+            db.delete(screenshot)
         db.commit()
         
         # Delete the actual files
@@ -362,6 +391,19 @@ async def delete_screenshots_before_date(date: str, db = Depends(get_db)):
             except Exception as e:
                 print(f"Error deleting file {file_path}: {e}")
         
+        # Construct a message that includes the filter information
+        message_parts = [f"Deleted {count} screenshots before {date}"]
+        if exclude_favorites:
+            message_parts.append("excluding favorites")
+        if exclude_with_notes:
+            message_parts.append("excluding those with notes")
+        if tag_id:
+            tag = db.query(Tag).filter(Tag.id == tag_id).first()
+            if tag:
+                message_parts.append(f"with tag '{tag.name}'")
+        
+        message = " ".join(message_parts)
+        
         # Broadcast update
         await manager.broadcast({
             "type": "screenshots_deleted",
@@ -370,7 +412,7 @@ async def delete_screenshots_before_date(date: str, db = Depends(get_db)):
         
         return {
             "success": True, 
-            "message": f"Deleted {count} screenshots before {date}", 
+            "message": message, 
             "count": count,
             "files_deleted": deleted_files
         }
