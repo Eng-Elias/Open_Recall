@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Request, Query, Depends, WebSocket
+from fastapi import FastAPI, Request, Query, Depends, WebSocket, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import uvicorn
 from utils.screenshot_utils import screenshot_manager
 from utils.db_utils import Base, engine, get_db, Screenshot, Tag
 from utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
@@ -16,13 +15,13 @@ from sqlalchemy import or_, func
 import math
 import os
 from fastapi import HTTPException
+import uvicorn
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
 # Ensure screenshots directory exists
-screenshots_dir = os.path.join(os.path.dirname(__file__), "data", "screenshots")
-os.makedirs(screenshots_dir, exist_ok=True)
+os.makedirs(screenshot_manager.storage_path, exist_ok=True)
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
@@ -55,7 +54,7 @@ app = FastAPI(lifespan=lifespan)
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
-app.mount("/data/screenshots", StaticFiles(directory=screenshots_dir), name="screenshots")
+app.mount("/data/screenshots", StaticFiles(directory=screenshot_manager.storage_path), name="screenshots")
 
 # Templates
 templates = Jinja2Templates(directory="templates")
@@ -375,7 +374,8 @@ async def delete_screenshots_before_date(
         count = len(screenshots)
         
         # Get the file paths to delete from filesystem
-        file_paths = [screenshot.file_path for screenshot in screenshots if screenshot.file_path]
+        # Get the screenshots storage path
+        file_paths = [os.path.join(screenshot_manager.storage_path, screenshot.file_path) for screenshot in screenshots if screenshot.file_path]
         
         # Delete screenshots from database
         for screenshot in screenshots:

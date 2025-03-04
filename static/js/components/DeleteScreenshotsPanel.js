@@ -128,7 +128,7 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
               <input
                 type="date"
                 id="delete-date"
-                className={`form-control ${error ? "is-invalid" : ""}`}
+                className={`form-control w-25 ${error ? "is-invalid" : ""}`}
                 value={date}
                 onChange={handleDateChange}
                 max={new Date().toISOString().split("T")[0]}

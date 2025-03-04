@@ -109,7 +109,10 @@ class ScreenshotManager:
             
             image = Image.fromarray(image_array)
             image.save(filepath, format="webp", quality=90, method=6)
-            return filename  # Return only filename, not full path
+            # Return only filename, not full path
+            # NOTE: When accessing this file later, you must join it with the storage_path
+            # For example, when deleting files, use os.path.join(storage_path, file_path)
+            return filename
         except Exception as e:
             print(f"Error saving screenshot: {e}")
             return None
