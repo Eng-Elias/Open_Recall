@@ -170,12 +170,13 @@ const SettingsPanel = () => {
       {isExpanded && (
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <div className="form-check form-switch">
+            <div className="settings-group">
+              <h5>Summarization Settings</h5>
+              <div className="mb-3 form-check">
                 <input
-                  className="form-check-input"
                   type="checkbox"
-                  id="enable-summarization"
+                  className="form-check-input"
+                  id="enable_summarization"
                   checked={settings.enable_summarization}
                   onChange={(e) =>
                     handleSettingChange(
@@ -186,101 +187,109 @@ const SettingsPanel = () => {
                 />
                 <label
                   className="form-check-label"
-                  htmlFor="enable-summarization"
+                  htmlFor="enable_summarization"
                 >
-                  Enable AI Summarization
+                  Enable Summarization
                 </label>
+                <small className="text-muted d-block mt-1">
+                  <i className="bi bi-info-circle me-1"></i>
+                  When enabled, OpenRecall will generate summaries of your
+                  screenshots
+                </small>
               </div>
-              <small className="text-muted d-block mt-1">
-                <i className="bi bi-info-circle me-1"></i>
-                Enabling summarization requires high processing power as it uses
-                language models locally on your PC.
-              </small>
-            </div>
 
-            <div className="mb-3">
-              <label htmlFor="summarization-model" className="form-label">
-                Summarization Model
-              </label>
-              <select
-                className="form-select"
-                id="summarization-model"
-                value={settings.summarization_model}
-                onChange={(e) =>
-                  handleSettingChange("summarization_model", e.target.value)
-                }
-              >
-                {availableModels.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.name} {model.downloaded ? "✓" : ""}
-                  </option>
-                ))}
-              </select>
-              <small className="text-muted d-block mt-1">
-                <i className="bi bi-info-circle me-1"></i>
-                Select the model to use for summarization. Models need to be
-                downloaded before use.
-              </small>
-            </div>
-
-            {/* Model download section */}
-            <div className="mb-4">
-              <h6>Available Models</h6>
-              {isLoadingModels ? (
-                <div className="text-center p-3">
-                  <div
-                    className="spinner-border spinner-border-sm"
-                    role="status"
-                  >
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                  <span className="ms-2">Loading models...</span>
-                </div>
-              ) : (
-                <div className="list-group">
-                  {availableModels.map((model) => (
-                    <div
-                      key={model.id}
-                      className="list-group-item d-flex justify-content-between align-items-center"
+              {/* Only show model selection if summarization is enabled */}
+              {settings.enable_summarization && (
+                <>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="summarization_model"
+                      className="form-label"
                     >
-                      <div>
-                        <div className="fw-bold">{model.name}</div>
-                        <small className="text-muted">
-                          {model.description}
-                        </small>
+                      Summarization Model
+                    </label>
+                    <select
+                      className="form-select"
+                      id="summarization_model"
+                      value={settings.summarization_model}
+                      onChange={(e) =>
+                        handleSettingChange(
+                          "summarization_model",
+                          e.target.value
+                        )
+                      }
+                    >
+                      {availableModels.map((model) => (
+                        <option key={model.id} value={model.id}>
+                          {model.name}
+                        </option>
+                      ))}
+                    </select>
+                    <small className="text-muted d-block mt-1">
+                      <i className="bi bi-info-circle me-1"></i>
+                      Select the model to use for summarization. Models need to
+                      be downloaded before use.
+                    </small>
+                  </div>
+
+                  <div className="mb-3">
+                    <h6>Available Models</h6>
+                    {isLoadingModels ? (
+                      <div className="text-center p-3">
+                        <div
+                          className="spinner-border spinner-border-sm"
+                          role="status"
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <span className="ms-2">Loading models...</span>
                       </div>
-                      <div>
-                        {model.downloaded ? (
-                          <span className="badge bg-success">Downloaded</span>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-outline-primary"
-                            onClick={() => handleDownloadModel(model.id)}
-                            disabled={isDownloadingModel}
+                    ) : (
+                      <div className="list-group">
+                        {availableModels.map((model) => (
+                          <div
+                            key={model.id}
+                            className="list-group-item d-flex justify-content-between align-items-center"
                           >
-                            {isDownloadingModel &&
-                            downloadingModelId === model.id ? (
-                              <>
-                                <span
-                                  className="spinner-border spinner-border-sm me-1"
-                                  role="status"
-                                  aria-hidden="true"
-                                ></span>
-                                Downloading...
-                              </>
-                            ) : (
-                              <>
-                                <i className="bi bi-download me-1"></i>
-                                Download
-                              </>
-                            )}
-                          </button>
-                        )}
+                            <div>
+                              <div className="fw-bold">{model.name}</div>
+                              <small className="text-muted">
+                                {model.description}
+                              </small>
+                            </div>
+                            <div>
+                              {model.downloaded ? (
+                                <span className="badge bg-success">
+                                  Downloaded
+                                </span>
+                              ) : (
+                                <button
+                                  className="btn btn-sm btn-primary"
+                                  onClick={() => handleDownloadModel(model.id)}
+                                  disabled={isDownloadingModel}
+                                >
+                                  {isDownloadingModel &&
+                                  downloadingModelId === model.id ? (
+                                    <>
+                                      <span
+                                        className="spinner-border spinner-border-sm me-1"
+                                        role="status"
+                                        aria-hidden="true"
+                                      ></span>
+                                      Downloading...
+                                    </>
+                                  ) : (
+                                    "Download"
+                                  )}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
 

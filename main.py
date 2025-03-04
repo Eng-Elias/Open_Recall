@@ -438,73 +438,70 @@ async def summarize_search_results(
     Summarize the search results based on the provided filters.
     Maximum of 500 screenshots can be summarized at once.
     """
-    # Base query
+    # Check if summarization is enabled in settings
+    if not settings_manager.get_setting("enable_summarization", False):
+        return {"summary": "Summarization is disabled in settings. Please enable it to use this feature."}
+    
+    # Apply filters to get screenshots
     query = db.query(Screenshot)
     
-    # Apply filters
     if start_date:
-        try:
-            start_datetime = datetime.fromisoformat(start_date)
-            query = query.filter(Screenshot.timestamp >= start_datetime)
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid start_date format")
-            
+        query = query.filter(Screenshot.timestamp >= start_date)
+    
     if end_date:
-        try:
-            end_datetime = datetime.fromisoformat(end_date)
-            query = query.filter(Screenshot.timestamp <= end_datetime)
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid end_date format")
-            
+        query = query.filter(Screenshot.timestamp <= end_date)
+    
     if app_name:
         query = query.filter(Screenshot.app_name == app_name)
+    
     if is_favorite is not None:
         query = query.filter(Screenshot.is_favorite == is_favorite)
+    
     if tag_ids:
-        query = query.filter(Screenshot.tags.any(Tag.id.in_(tag_ids)))
+        for tag_id in tag_ids:
+            query = query.filter(Screenshot.tags.any(Tag.id == tag_id))
+    
     if search_text:
-        query = query.filter(Screenshot.extracted_text.ilike(f"%{search_text}%"))
+        query = query.filter(Screenshot.extracted_text.contains(search_text))
     
-    # Get total count
-    total = query.count()
+    # Order by timestamp
+    query = query.order_by(Screenshot.timestamp.desc())
     
-    # Check if there are too many screenshots
-    if total > 500:
-        raise HTTPException(
-            status_code=400, 
-            detail="Cannot summarize more than 500 screenshots. Please refine your search filters."
-        )
+    # Limit to 500 screenshots for performance
+    screenshots = query.limit(500).all()
     
-    if total == 0:
-        return {"summary": "No screenshots found matching your criteria."}
+    if not screenshots:
+        return {"summary": "No screenshots found matching the filters."}
     
-    # Get all matching screenshots
-    screenshots = query.order_by(Screenshot.timestamp.desc()).all()
+    # Group screenshots by day for batch processing
+    screenshots_by_day = {}
+    for screenshot in screenshots:
+        day = screenshot.timestamp.date() # Extract date part
+        if day not in screenshots_by_day:
+            screenshots_by_day[day] = []
+        screenshots_by_day[day].append(screenshot)
     
-    # Process screenshots in batches of 100
-    batch_size = 100
-    batches = [screenshots[i:i + batch_size] for i in range(0, len(screenshots), batch_size)]
+    # Process each day's screenshots
     batch_summaries = []
-    
-    for batch in batches:
-        batch_text = ""
-        for screenshot in batch:
-            # Use existing summary if available, otherwise use app name and timestamp
-            if screenshot.summary and screenshot.summary.strip():
-                batch_text += f"Screenshot from {screenshot.app_name} at {screenshot.timestamp} (Window Title: {screenshot.window_title}): {screenshot.summary}\n\n"
-            else:
-                batch_text += f"Screenshot from {screenshot.app_name} at {screenshot.timestamp} (Window Title: {screenshot.window_title}): {screenshot.extracted_text}\n\n"
+    for day, day_screenshots in screenshots_by_day.items():
+        # Combine OCR text from all screenshots for this day
+        combined_text = ""
+        for screenshot in day_screenshots:
+            if screenshot.extracted_text:
+                timestamp = screenshot.timestamp.isoformat()
+                app_name = screenshot.app_name or "Unknown"
+                combined_text += f"[{timestamp}] [{app_name}] {screenshot.extracted_text}\n\n"
         
-        # Generate summary for this batch
-        if batch_text:
-            batch_summary = generate_summary(batch_text, max_length=150)
+        if combined_text:
+            # Generate summary for this day
+            batch_summary = generate_summary(combined_text)
             if batch_summary:
                 batch_summaries.append(batch_summary)
     
     # Now summarize the batch summaries
     if batch_summaries:
         final_text = "The following are summaries of groups of screenshots:\n\n" + "\n\n".join(batch_summaries)
-        final_summary = generate_search_results_summary(final_text, max_length=500)
+        final_summary = generate_search_results_summary(final_text, max_length=300)
         return {"summary": final_summary}
     else:
         return {"summary": "Could not generate summary for the selected screenshots."}

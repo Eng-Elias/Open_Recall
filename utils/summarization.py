@@ -217,50 +217,52 @@ Summary:"""
         print(f"Error generating summary with deepseek-r1: {e}")
         return ""
 
-def generate_search_results_summary(text, max_length=500, min_length=100):
+def generate_search_results_summary(text, max_length=300, min_length=100):
     """
     Generate a summary specifically for search results, which may contain multiple screenshots.
     
     Args:
-        text (str): The text to summarize, containing information about multiple screenshots
-        max_length (int): Maximum length of the summary
-        min_length (int): Minimum length of the summary
+        text (str): The text to summarize
+        max_length (int, optional): The maximum length of the summary. Defaults to 300.
+        min_length (int, optional): The minimum length of the summary. Defaults to 100.
         
     Returns:
-        str: The generated summary or empty string if summarization fails
+        str: The generated summary
     """
-    if not text or len(text.strip()) < min_length:
-        return ""
-        
+    if not get_summarizer():
+        return "Summarization model not initialized. Please check your settings."
+    
     try:
-        # Initialize the model and tokenizer if not already done
-        if not get_summarizer():
-            return ""
+        global model, tokenizer
         
         # Create prompt for summarization
         prompt = f"""
 The following text contains information about multiple screenshots captured from a user's computer.
-Generate a comprehensive summary (maximum 500 words) that synthesizes the main activities, applications used, 
-and content viewed across these screenshots. Focus on identifying patterns, recurring themes, and key information.
+Generate a concise summary (maximum 300 words) that synthesizes the main activities, applications used, 
+and content viewed across these screenshots. Format the summary as a list of bullet points, with each point 
+highlighting a key insight, pattern, or important piece of information. Focus on identifying:
+
+- Main applications and websites used
+- Key topics or subjects being worked on
+- Recurring themes or patterns across screenshots
+- Important information that appears frequently
 
 Text: {text}
 
-Summary:"""
+Summary (as bullet points):
+"""
         
         # Generate summary
         inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-        
-        with torch.no_grad():
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=max_length,
-                min_new_tokens=min_length,
-                temperature=0.4,  # Slightly higher temperature for more creative synthesis
-                do_sample=True,
-                top_p=0.95,
-                top_k=50,
-                repetition_penalty=1.2
-            )
+        outputs = model.generate(
+            inputs.input_ids,
+            max_new_tokens=max_length,
+            min_new_tokens=min_length,
+            temperature=0.7,
+            do_sample=True,
+            top_p=0.9,
+            pad_token_id=tokenizer.eos_token_id
+        )
         
         # Decode the generated summary
         summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -269,7 +271,7 @@ Summary:"""
         if '</think>' in summary:
             summary = summary.split('</think>')[1].strip()
         
-        return summary
+        return summary.strip()
     except Exception as e:
-        print(f"Error generating search results summary with deepseek-r1: {e}")
-        return ""
+        logger.error(f"Error generating search results summary: {e}")
+        return "Failed to generate summary. Please try again later."

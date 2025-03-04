@@ -7,6 +7,9 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
   const [summary, setSummary] = React.useState("");
   const [isSummarizing, setIsSummarizing] = React.useState(false);
   const [summaryError, setSummaryError] = React.useState(null);
+  const [settings, setSettings] = React.useState({
+    enable_summarization: false,
+  });
 
   const handleInputChange = (field, value) => {
     onFilterChange(field, value);
@@ -115,6 +118,23 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
     };
   }, []);
 
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch("/api/settings");
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data);
+      }
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    }
+  };
+
+  // Fetch settings when component mounts
+  React.useEffect(() => {
+    fetchSettings();
+  }, []);
+
   // Format filter values for display in the summary modal
   const getFilterSummary = () => {
     const parts = [];
@@ -216,18 +236,21 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
             </label>
           </div>
         </div>
-        <div className="col-md-3">
-          <div className="mt-4">
-            <button
-              className="btn btn-outline-primary"
-              onClick={handleSummarizeClick}
-              type="button"
-            >
-              <i className="bi bi-file-text me-2"></i>
-              Summarize Results
-            </button>
+        {/* Only show the summarize button if summarization is enabled */}
+        {settings.enable_summarization && (
+          <div className="col-md-3">
+            <div className="mt-4">
+              <button
+                className="btn btn-outline-primary"
+                onClick={handleSummarizeClick}
+                type="button"
+              >
+                <i className="bi bi-file-text me-2"></i>
+                Summarize Results
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Summary Modal */}
