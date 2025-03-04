@@ -7,7 +7,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Default settings
 DEFAULT_SETTINGS = {
     "enable_summarization": False,
-    "capture_interval": 300  # Default 5 minutes (300 seconds)
+    "capture_interval": 300,  # Default 5 minutes (300 seconds)
+    "summarization_model": "Qwen/Qwen2.5-0.5B"  # Default model
 }
 
 class SettingsManager:

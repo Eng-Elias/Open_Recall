@@ -249,7 +249,7 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body">
+              <div className="modal-body overflow-auto">
                 <div className="mb-3">
                   <strong>Filters: </strong>
                   <span className="text-muted">

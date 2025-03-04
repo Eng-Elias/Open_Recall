@@ -1,31 +1,160 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+import os
+from utils.settings import settings_manager
+from huggingface_hub import snapshot_download, hf_hub_download
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Initialize the summarization components
 model = None
 tokenizer = None
+current_model_name = None
+
+# Define available models
+AVAILABLE_MODELS = {
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+        "name": "DeepSeek R1 1.5B",
+        "description": "Lightweight reasoning model for efficient summarization"
+    },
+    "Qwen/Qwen2.5-0.5B": {
+        "name": "Qwen 2.5 - 0.5B",
+        "description": "Smaller model with faster inference"
+    }
+}
+
+def is_model_downloaded(model_name):
+    """
+    Check if the model is already downloaded in the Hugging Face cache.
+    
+    Args:
+        model_name (str): The name of the model to check
+        
+    Returns:
+        bool: True if the model is downloaded, False otherwise
+    """
+    try:
+        # Get the cache directory
+        cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+        
+        # Try a more reliable method using hf_hub_download to check if model exists
+        try:
+            # Try to download the model's config file which is small and should exist for all models
+            hf_hub_download(
+                repo_id=model_name,
+                filename="config.json",
+                local_files_only=True  # Don't actually download, just check if it exists
+            )
+            logger.info(f"Model {model_name} is already downloaded")
+            return True
+        except Exception:
+            # If local_files_only=True raises an exception, the model isn't downloaded
+            logger.info(f"Model {model_name} is not downloaded")
+            return False
+    except Exception as e:
+        logger.error(f"Error checking if model is downloaded: {e}")
+        return False
+
+def download_model(model_name):
+    """
+    Download a model from Hugging Face.
+    
+    Args:
+        model_name (str): The name of the model to download
+        
+    Returns:
+        bool: True if the download was successful, False otherwise
+    """
+    try:
+        logger.info(f"Starting download of model: {model_name}")
+        
+        # Use snapshot_download to get the entire model
+        snapshot_download(
+            repo_id=model_name,
+            local_dir=None,  # Use default cache dir
+            local_dir_use_symlinks=False  # Actual files, not symlinks
+        )
+        
+        logger.info(f"Successfully downloaded model: {model_name}")
+        return True
+    except Exception as e:
+        logger.error(f"Error downloading model {model_name}: {e}")
+        return False
 
 def get_summarizer():
     """
-    Lazy initialization of the deepseek-r1 model to avoid loading it
-    until it's actually needed.
+    Lazy initialization of the summarization model based on settings.
+    Checks if the model is downloaded and downloads it if necessary.
     """
-    global model, tokenizer
-    if model is None or tokenizer is None:
-        try:
-            # Initialize the deepseek-r1 model and tokenizer
-            model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"  # Using the 7B model for better performance
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
-            model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                torch_dtype=torch.float16,  # Use half precision to save memory
-                device_map="auto"  # Automatically choose the best device
-            )
-            return True
-        except Exception as e:
-            print(f"Error initializing deepseek-r1 model: {e}")
-            return False
-    return True
+    global model, tokenizer, current_model_name
+    
+    # Get the model name from settings
+    model_name = settings_manager.get_setting("summarization_model", "Qwen/Qwen2.5-0.5B")
+    
+    # If the model is already loaded and it's the same as the one in settings, return
+    if model is not None and tokenizer is not None and current_model_name == model_name:
+        return True
+    
+    # If a different model was previously loaded, unload it to free memory
+    if model is not None and current_model_name != model_name:
+        logger.info(f"Unloading previous model: {current_model_name}")
+        # Delete the model and tokenizer to free up memory
+        del model
+        del tokenizer
+        # Force garbage collection to free up memory
+        import gc
+        gc.collect()
+        # Clear CUDA cache if available
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        model = None
+        tokenizer = None
+    
+    try:
+        # Check if the model is downloaded
+        if not is_model_downloaded(model_name):
+            logger.info(f"Model {model_name} not found locally. Attempting to download...")
+            # Download the model
+            if not download_model(model_name):
+                logger.error(f"Failed to download model: {model_name}")
+                return False
+            logger.info(f"Model {model_name} downloaded successfully")
+        
+        # Initialize the model and tokenizer
+        logger.info(f"Loading model: {model_name}")
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16,  # Use half precision to save memory
+            device_map="auto",  # Automatically choose the best device
+            low_cpu_mem_usage=True  # Optimize for lower memory usage
+        )
+        current_model_name = model_name
+        logger.info(f"Model {model_name} loaded successfully")
+        return True
+    except Exception as e:
+        logger.error(f"Error initializing model {model_name}: {e}")
+        return False
+
+def get_available_models():
+    """
+    Get a list of available models with their download status.
+    
+    Returns:
+        list: List of model information dictionaries
+    """
+    models = []
+    for model_id, model_info in AVAILABLE_MODELS.items():
+        models.append({
+            "id": model_id,
+            "name": model_info["name"],
+            "description": model_info["description"],
+            "downloaded": is_model_downloaded(model_id)
+        })
+    return models
 
 def generate_summary(text, max_length=100, min_length=30):
     """

@@ -5,7 +5,7 @@ from utils.screenshot_utils import screenshot_manager
 from utils.db_utils import Base, engine, get_db, Screenshot, Tag
 from utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
 from utils.settings import settings_manager
-from utils.summarization import generate_summary, generate_search_results_summary
+from utils.summarization import generate_summary, generate_search_results_summary, get_available_models, download_model, is_model_downloaded
 from contextlib import asynccontextmanager
 import signal
 import sys
@@ -518,6 +518,7 @@ async def get_settings():
 class SettingsUpdate(BaseModel):
     enable_summarization: Optional[bool] = None
     capture_interval: Optional[int] = None
+    summarization_model: Optional[str] = None
 
 @app.put("/api/settings")
 async def update_settings(settings: SettingsUpdate):
@@ -549,7 +550,55 @@ async def update_settings(settings: SettingsUpdate):
         "settings": settings_manager.get_all_settings()
     })
     
-    return {"success": True, "settings": settings_manager.get_all_settings()}
+    return settings_manager.get_all_settings()
+
+@app.get("/api/summarization/models")
+async def get_summarization_models():
+    """Get all available summarization models and their download status"""
+    return get_available_models()
+
+@app.get("/api/summarization/models/{model_id}/status")
+async def check_model_status(model_id: str):
+    """Check if a specific model is downloaded"""
+    # URL decode the model_id
+    from urllib.parse import unquote
+    model_id = unquote(model_id)
+    
+    # Check if the model exists in available models
+    from utils.summarization import AVAILABLE_MODELS
+    if model_id not in AVAILABLE_MODELS:
+        raise HTTPException(status_code=404, detail=f"Model {model_id} not found")
+    
+    # Check if the model is downloaded
+    is_downloaded = is_model_downloaded(model_id)
+    
+    return {
+        "id": model_id,
+        "name": AVAILABLE_MODELS[model_id]["name"],
+        "description": AVAILABLE_MODELS[model_id]["description"],
+        "downloaded": is_downloaded
+    }
+
+@app.post("/api/summarization/models/{model_id}/download")
+async def download_summarization_model(model_id: str):
+    """Download a specific summarization model"""
+    # URL decode the model_id
+    from urllib.parse import unquote
+    model_id = unquote(model_id)
+    
+    # Check if the model exists in available models
+    from utils.summarization import AVAILABLE_MODELS
+    if model_id not in AVAILABLE_MODELS:
+        raise HTTPException(status_code=404, detail=f"Model {model_id} not found")
+    
+    # Download the model
+    success = download_model(model_id)
+    
+    if not success:
+        raise HTTPException(status_code=500, detail=f"Failed to download model {model_id}")
+    
+    # Return updated model list
+    return get_available_models()
 
 if __name__ == "__main__":
     config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=True)

@@ -1,4 +1,5 @@
 {
   "enable_summarization": false,
-  "capture_interval": 300
+  "capture_interval": 300,
+  "summarization_model": "Qwen/Qwen2.5-0.5B"
 }
