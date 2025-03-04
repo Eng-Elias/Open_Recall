@@ -30,7 +30,7 @@ class Screenshot(Base):
     tags = relationship("Tag", 
                        secondary=screenshot_tags,
                        back_populates="screenshots",
-                       cascade="all, delete")
+                       cascade="save-update")
 
     def to_dict(self):
         """Convert model to dictionary"""
