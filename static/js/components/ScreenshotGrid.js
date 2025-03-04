@@ -45,7 +45,6 @@ const ScreenshotGrid = ({
   };
 
   React.useEffect(() => {
-    console.log(screenshots);
     if (selectedScreenshot) {
       const updatedScreenshot = screenshots.items.find(
         (s) => s.id === selectedScreenshot.id
@@ -164,7 +163,11 @@ const ScreenshotGrid = ({
                 i <= Math.min(totalPages - 1, currentPage + 1);
                 i++
               ) {
-                if (i === currentPage - 1 || i === currentPage || i === currentPage + 1) {
+                if (
+                  i === currentPage - 1 ||
+                  i === currentPage ||
+                  i === currentPage + 1
+                ) {
                   pages.push(i);
                 }
               }
@@ -189,15 +192,23 @@ const ScreenshotGrid = ({
                 })
                 .map((page, index) =>
                   page === "..." ? (
-                    <li key={`ellipsis-${index}`} className="page-item disabled">
+                    <li
+                      key={`ellipsis-${index}`}
+                      className="page-item disabled"
+                    >
                       <span className="page-link">...</span>
                     </li>
                   ) : (
                     <li
                       key={page}
-                      className={`page-item ${currentPage === page ? "active" : ""}`}
+                      className={`page-item ${
+                        currentPage === page ? "active" : ""
+                      }`}
                     >
-                      <button className="page-link" onClick={() => onPageChange(page)}>
+                      <button
+                        className="page-link"
+                        onClick={() => onPageChange(page)}
+                      >
                         {page}
                       </button>
                     </li>
