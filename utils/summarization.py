@@ -87,3 +87,60 @@ Summary:"""
     except Exception as e:
         print(f"Error generating summary with deepseek-r1: {e}")
         return ""
+
+def generate_search_results_summary(text, max_length=500, min_length=100):
+    """
+    Generate a summary specifically for search results, which may contain multiple screenshots.
+    
+    Args:
+        text (str): The text to summarize, containing information about multiple screenshots
+        max_length (int): Maximum length of the summary
+        min_length (int): Minimum length of the summary
+        
+    Returns:
+        str: The generated summary or empty string if summarization fails
+    """
+    if not text or len(text.strip()) < min_length:
+        return ""
+        
+    try:
+        # Initialize the model and tokenizer if not already done
+        if not get_summarizer():
+            return ""
+        
+        # Create prompt for summarization
+        prompt = f"""
+The following text contains information about multiple screenshots captured from a user's computer.
+Generate a comprehensive summary (maximum 500 words) that synthesizes the main activities, applications used, 
+and content viewed across these screenshots. Focus on identifying patterns, recurring themes, and key information.
+
+Text: {text}
+
+Summary:"""
+        
+        # Generate summary
+        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        
+        with torch.no_grad():
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=max_length,
+                min_new_tokens=min_length,
+                temperature=0.4,  # Slightly higher temperature for more creative synthesis
+                do_sample=True,
+                top_p=0.95,
+                top_k=50,
+                repetition_penalty=1.2
+            )
+        
+        # Decode the generated summary
+        summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        
+        summary = summary.replace(prompt, "")
+        if '</think>' in summary:
+            summary = summary.split('</think>')[1].strip()
+        
+        return summary
+    except Exception as e:
+        print(f"Error generating search results summary with deepseek-r1: {e}")
+        return ""
