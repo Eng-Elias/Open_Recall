@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import os
-from utils.settings import settings_manager
+from open_recall.utils.settings import settings_manager
 from huggingface_hub import snapshot_download, hf_hub_download
 import logging
 

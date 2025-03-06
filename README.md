@@ -10,35 +10,83 @@ Open_Recall is a powerful desktop application that helps you search, find and an
 .
 ├── electron/          # Electron main process
 │   └── main.js       # Electron entry point
-├── main.py           # FastAPI application
+├── open_recall/      # Python package
+│   ├── app.py        # Toga app entry point
+│   ├── main.py       # FastAPI application
+│   ├── static/       # Static files
+│   │   └── js/
+│   │       └── App.js # React components
+│   └── templates/
+│       └── index.html # Main template
+├── pyproject.toml    # Python project configuration for Briefcase
 ├── requirements.txt  # Python dependencies
 ├── package.json     # Node.js dependencies
-├── static/          # Static files
-│   └── js/
-│       └── App.js   # React components
-└── templates/
-    └── index.html   # Main template
+└── README.md         # This file
 ```
 
-## Setup and Running
+## Installation
 
-1. Install Python dependencies:
+### Using the Installer
+
+1. Download the latest installer from the Releases page
+2. Run the installer and follow the on-screen instructions
+3. Launch OpenRecall from your Start Menu or Desktop shortcut
+
+### Development Setup
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/Eng-Elias/Open_Recall.git
+   cd Open_Recall
+   ```
+
+2. Install Python dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Install Node.js dependencies:
+3. Install Node.js dependencies:
 
 ```bash
 npm install
 ```
 
-3. Run the desktop application (this will start both FastAPI and Electron):
+4. Install development dependencies:
+   ```
+   pip install briefcase
+   ```
 
-```bash
-npm run dev
-```
+5. Run the app in development mode:
+   ```
+   python -m open_recall.app
+   ```
+
+## Packaging with Briefcase
+
+To create a standalone installer for distribution:
+
+1. Install Briefcase:
+   ```
+   pip install briefcase
+   ```
+
+2. Create the application scaffold:
+   ```
+   briefcase create
+   ```
+
+3. Build the application:
+   ```
+   briefcase build
+   ```
+
+4. Package the application as an installer:
+   ```
+   briefcase package
+   ```
+
+The packaged installer will be available in the `dist` directory.
 
 ## License
 

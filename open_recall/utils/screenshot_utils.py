@@ -6,9 +6,17 @@ from typing import List, Optional
 import mss
 import numpy as np
 from PIL import Image
-import win32gui
-import win32process
+import platform
 import psutil
+
+# Try to import Windows-specific modules with fallback for other platforms
+try:
+    import win32gui
+    import win32process
+    WINDOWS_MODULES_AVAILABLE = True
+except ImportError:
+    WINDOWS_MODULES_AVAILABLE = False
+
 from .db_utils import get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
 from .summarization import generate_summary
@@ -46,14 +54,26 @@ class ScreenshotManager:
 
     def _get_active_window_info(self) -> tuple:
         """Get active window information"""
-        try:
-            hwnd = win32gui.GetForegroundWindow()
-            _, pid = win32process.GetWindowThreadProcessId(hwnd)
-            app_name = psutil.Process(pid).name()
-            window_title = win32gui.GetWindowText(hwnd)
-            return app_name, window_title
-        except:
-            return "unknown", "unknown"
+        # Check if running on Windows and if Windows modules are available
+        if platform.system() == "Windows" and WINDOWS_MODULES_AVAILABLE:
+            try:
+                hwnd = win32gui.GetForegroundWindow()
+                _, pid = win32process.GetWindowThreadProcessId(hwnd)
+                app_name = psutil.Process(pid).name()
+                window_title = win32gui.GetWindowText(hwnd)
+                return app_name, window_title
+            except Exception as e:
+                print(f"Error getting window info: {e}")
+                return "unknown", "unknown"
+        else:
+            # Fallback for non-Windows platforms or when modules aren't available
+            try:
+                # Try to get at least the process name using psutil
+                current_process = psutil.Process()
+                app_name = current_process.name()
+                return app_name, "OpenRecall"
+            except:
+                return "OpenRecall", "OpenRecall"
 
     def _calculate_image_similarity(self, img1: np.ndarray, img2: np.ndarray) -> float:
         """Calculate structural similarity between two images"""

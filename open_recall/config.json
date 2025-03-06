@@ -1,0 +1,12 @@
+{
+  "app": {
+    "port": 8000,
+    "host": "localhost",
+    "debug": false
+  },
+  "python": {
+    "version": "3.11.3",
+    "embedded": true,
+    "installDir": "python_runtime"
+  }
+}

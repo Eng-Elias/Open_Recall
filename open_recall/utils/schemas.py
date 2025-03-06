@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Generic, TypeVar
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 T = TypeVar('T')
 
@@ -12,9 +12,8 @@ class TagCreate(TagBase):
 
 class TagResponse(TagBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class ScreenshotResponse(BaseModel):
     id: int
@@ -28,9 +27,8 @@ class ScreenshotResponse(BaseModel):
     notes: str | None = None
     summary: str | None = None
     tags: List[TagResponse]
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class Page(BaseModel, Generic[T]):
     items: List[T]

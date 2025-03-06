@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Request, Query, Depends, WebSocket, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from utils.screenshot_utils import screenshot_manager
-from utils.db_utils import Base, engine, get_db, Screenshot, Tag
-from utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
-from utils.settings import settings_manager
-from utils.summarization import generate_summary, generate_search_results_summary, get_available_models, download_model, is_model_downloaded
+from open_recall.utils.screenshot_utils import screenshot_manager
+from open_recall.utils.db_utils import Base, engine, get_db, Screenshot, Tag
+from open_recall.utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
+from open_recall.utils.settings import BASE_DIR, settings_manager
+from open_recall.utils.summarization import generate_summary, generate_search_results_summary, get_available_models, download_model, is_model_downloaded
 from contextlib import asynccontextmanager
 import signal
 import sys
@@ -15,6 +15,7 @@ from typing import List, Optional
 from sqlalchemy import or_, func
 import math
 import os
+import json
 from fastapi import HTTPException
 import uvicorn
 
@@ -22,7 +23,28 @@ import uvicorn
 Base.metadata.create_all(bind=engine)
 
 # Ensure screenshots directory exists
+screenshots_dir = os.path.join(BASE_DIR, "data", "screenshots")
+os.makedirs(screenshots_dir, exist_ok=True)
 os.makedirs(screenshot_manager.storage_path, exist_ok=True)
+
+# Load configuration from config.json
+def load_config():
+    try:
+        config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            return config
+        return {"app": {"port": 8000, "host": "localhost"}}
+    except Exception as e:
+        print(f"Error loading config: {e}")
+        return {"app": {"port": 8000, "host": "localhost"}}
+
+# Get configuration
+config = load_config()
+APP_PORT = int(os.environ.get('OPENRECALL_PORT', config['app']['port']))
+APP_HOST = os.environ.get('OPENRECALL_HOST', config['app']['host'])
+APP_DEBUG = os.environ.get('OPENRECALL_DEBUG', '').lower() == 'true'
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
@@ -53,12 +75,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 app.mount("/data/screenshots", StaticFiles(directory=screenshot_manager.storage_path), name="screenshots")
 
 # Templates
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 @app.get("/")
 async def read_root(request: Request):
@@ -598,11 +619,16 @@ async def download_summarization_model(model_id: str):
     return get_available_models()
 
 if __name__ == "__main__":
-    config = uvicorn.Config("main:app", host="0.0.0.0", port=8000, reload=True)
+    config = uvicorn.Config("open_recall.main:app", host=APP_HOST, port=APP_PORT, reload=APP_DEBUG)
     server = uvicorn.Server(config)
     try:
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+        
+        # Start the server
         server.run()
-    except KeyboardInterrupt:
-        print("Received shutdown signal...")
+    except Exception as e:
+        print(f"Error starting server: {e}")
+        sys.exit(1)
+    finally:
         screenshot_manager.stop()
-        sys.exit(0)

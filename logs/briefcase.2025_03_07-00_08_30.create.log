@@ -1,0 +1,828 @@
+Date/Time:       2025-03-07 00:08:31 
+Command line:    E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Scripts\briefcase create
+
+OS Release:      Windows 10
+OS Version:      10.0.19045
+Architecture:    AMD64
+Platform:        Windows-10-10.0.19045-SP0
+
+Python exe:      E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Scripts\python.exe
+Python version:  3.11.3 (tags/v3.11.3:f3909b8, Apr  4 2023, 23:49:59) [MSC v.1934 64 bit (AMD64)]
+Virtual env:     True
+Conda env:       False
+
+Briefcase:       0.3.22
+Target platform: windows
+Target format:   app
+
+Environment Variables:
+	AIDER_SIMPLE_OUTPUT=1
+	ALLUSERSPROFILE=C:\ProgramData
+	ANDROID_HOME=D:\Android\SDK
+	APPCODE_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\appcode.vmoptions
+	APPDATA=C:\Users\Friendship\AppData\Roaming
+	ASL.LOG=Destination=file
+	BUNDLED_DEBUGPY_PATH=c:\Users\Friendship\.windsurf\extensions\ms-python.debugpy-2025.4.0-win32-x64\bundled\libs\debugpy
+	CHOCOLATEYINSTALL=C:\ProgramData\chocolatey
+	CHOCOLATEYLASTPATHUPDATE=132990291361390825
+	CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_45372_WDUZVMQECYUUNGOM
+	CLASSPATH=.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;
+	CLION_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\clion.vmoptions
+	COLORTERM=truecolor
+	COMMONPROGRAMFILES=C:\Program Files\Common Files
+	COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files
+	COMMONPROGRAMW6432=C:\Program Files\Common Files
+	COMPUTERNAME=DESKTOP-AOPH178
+	COMSPEC=C:\Windows\system32\cmd.exe
+	DATAGRIP_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\datagrip.vmoptions
+	DATASPELL_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\dataspell.vmoptions
+	DEBUGPY_ADAPTER_ENDPOINTS=c:\Users\Friendship\.windsurf\extensions\ms-python.debugpy-2025.0.1-win32-x64\.noConfigDebugAdapterEndpoints\endpoint-14388a5add395598.txt
+	DEVECOSTUDIO_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\devecostudio.vmoptions
+	DRIVERDATA=C:\Windows\System32\Drivers\DriverData
+	FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer
+	FPS_BROWSER_USER_PROFILE_STRING=Default
+	GATEWAY_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\gateway.vmoptions
+	GEMINI_API_KEY=********************
+	GIT_ASKPASS=********************
+	GOLAND_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\goland.vmoptions
+	HIK_JDK_PATH=%JAVA_HOME%
+	HOMEDRIVE=C:
+	HOMEPATH=\Users\Friendship
+	IDEA_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\idea.vmoptions
+	JETBRAINSCLIENT_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\jetbrainsclient.vmoptions
+	JETBRAINS_CLIENT_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\jetbrains_client.vmoptions
+	LANG=en_US.UTF-8
+	LOCALAPPDATA=C:\Users\Friendship\AppData\Local
+	LOGONSERVER=\\DESKTOP-AOPH178
+	MAKEFLAGS=
+	MAKELEVEL=1
+	MFLAGS=
+	NODEJS840WIN64_NODEJS_PATH=C:\Program Files (x86)\HikCentral Access Control\VSM Servers\OpenAPI\nodejs\node-v10.15.0-win-x64
+	NUMBER_OF_PROCESSORS=12
+	ONEDRIVE=C:\Users\Friendship\OneDrive
+	ONEDRIVECONSUMER=C:\Users\Friendship\OneDrive
+	OPENAI_API_KEY=********************
+	ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+	OS=Windows_NT
+	PATH=E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Scripts;C:\Program Files\Java\jdk-17\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\chocolatey\bin;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\dotnet\;C:\Program Files (x86)\GnuWin32\bin;C:\curl-7.83.1_3-win64-mingw\bin;C:\Program Files (x86)\dotnet\;C:\Program Files\wkhtmltopdf\bin;D:\Android\SDK\platform-tools;C:\Gradle\gradle-8.0.2\bin;C:\Program Files\Java\jdk-19\bin;C:\Program Files (x86)\Yarn\bin\;C:\Android\cmdline-tools\tools\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\PuTTY\;C:\msys64\mingw64\bin;C:\MinGW\bin;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Ampps\php;C:\Program Files\PostgreSQL\15\bin;;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR;C:\Users\Friendship\scoop\shims;C:\Users\Friendship\.cargo\bin;C:\Users\Friendship\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\Friendship\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\PyCharm 2023.3.3\bin;;C:\Program Files (x86)\GnuWin32\bin;C:\curl-7.83.1_3-win64-mingw\bin;C:\Users\Friendship\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\wkhtmltopdf\bin;C:\Users\Friendship\AppData\Roaming\npm;C:\Users\Friendship\.dotnet\tools;C:\Program Files\Azure Data Studio\bin;C:\Users\Friendship\AppData\Local\Yarn\bin;C:\Program Files (x86)\sbt\bin;C:\Users\Friendship\.bun\bin;C:\Users\Friendship\AppData\Local\Programs\Ollama;C:\msys64\mingw64\bin;C:\Users\Friendship\AppData\Local\Programs\Python\Python311\;C:\Users\Friendship\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\Friendship\AppData\Local\Programs\Windsurf\bin;C:\Program Files\PostgreSQL\15\bin;
+	PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+	PHPSTORM_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\phpstorm.vmoptions
+	PROCESSOR_ARCHITECTURE=AMD64
+	PROCESSOR_IDENTIFIER=AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD
+	PROCESSOR_LEVEL=23
+	PROCESSOR_REVISION=6001
+	PROGRAMDATA=C:\ProgramData
+	PROGRAMFILES=C:\Program Files
+	PROGRAMFILES(X86)=C:\Program Files (x86)
+	PROGRAMW6432=C:\Program Files
+	PROMPT=(venv) $P$G
+	PSMODULEPATH=C:\Users\Friendship\Documents\WindowsPowerShell\Modules;
+	PUBLIC=C:\Users\Public
+	PYCHARM=C:\Program Files\JetBrains\PyCharm 2023.3.3\bin;
+	PYCHARM_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\pycharm.vmoptions
+	PYDEVD_DISABLE_FILE_VALIDATION=1
+	PYTHONIOENCODING=utf-8
+	RIDER_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\rider.vmoptions
+	RUBYMINE_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\rubymine.vmoptions
+	SESSIONNAME=Console
+	STUDIO_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\studio.vmoptions
+	SYSTEMDRIVE=C:
+	SYSTEMROOT=C:\Windows
+	TEMP=C:\Users\FRIEND~1\AppData\Local\Temp
+	TERM_PROGRAM=vscode
+	TERM_PROGRAM_VERSION=1.94.0
+	TMP=C:\Users\FRIEND~1\AppData\Local\Temp
+	USERDOMAIN=DESKTOP-AOPH178
+	USERDOMAIN_ROAMINGPROFILE=DESKTOP-AOPH178
+	USERNAME=Friendship
+	USERPROFILE=C:\Users\Friendship
+	VIRTUAL_ENV=E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv
+	VIRTUAL_ENV_PROMPT=(venv) 
+	VSCODE_DEBUGPY_ADAPTER_ENDPOINTS=c:\Users\Friendship\.windsurf\extensions\ms-python.debugpy-2025.4.0-win32-x64\.noConfigDebugAdapterEndpoints\endpoint-14388a5add395598.txt
+	VSCODE_ENV_PREPEND=PATH=E\x3a\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Scripts;
+	VSCODE_ENV_REPLACE=PROMPT=(venv) $P$G:VIRTUAL_ENV=E\x3a\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv:VIRTUAL_ENV_PROMPT=(venv) :_OLD_VIRTUAL_PROMPT=$P$G
+	VSCODE_GIT_ASKPASS_EXTRA_ARGS=********************
+	VSCODE_GIT_ASKPASS_MAIN=********************
+	VSCODE_GIT_ASKPASS_NODE=********************
+	VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-ae9da73873-sock
+	WEBIDE_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\webide.vmoptions
+	WEBSTORM_VM_OPTIONS=C:\ja-netfilter-all\vmoptions\webstorm.vmoptions
+	WINDIR=C:\Windows
+	XDG_DATA_DIRS=C:/msys64/mingw64/share
+	_OLD_VIRTUAL_PROMPT=$P$G
+	__COMPAT_LAYER=DetectorsAppHealth
+
+pyproject.toml:
+[build-system]
+requires = ["briefcase"]
+build-backend = "briefcase.bootstrap"
+
+[tool.briefcase]
+project_name = "OpenRecall"
+bundle = "com.openrecall"
+version = "1.0.0"
+url = "https://github.com/Eng-Elias/Open_Recall"
+license = "MIT"
+author = "OpenRecall Team"
+author_email = "info@openrecall.com"
+
+[tool.briefcase.app.open_recall]
+formal_name = "OpenRecall"
+description = "A screenshot capture and management application"
+icon = "open_recall/static/images/icon"
+sources = ["open_recall"]
+requires = [
+    "absl-py>=2.1.0",
+    "accelerate>=1.4.0",
+    "aiofiles>=24.1.0",
+    "alembic>=1.14.1",
+    "annotated-types>=0.7.0",
+    "anyascii>=0.3.2",
+    "anyio>=3.7.1",
+    "astunparse>=1.6.3",
+    "cached-property>=2.0.1",
+    "certifi>=2025.1.31",
+    "charset-normalizer>=3.4.1",
+    "click>=8.1.8",
+    "colorama>=0.4.6",
+    "defusedxml>=0.7.1",
+    "fastapi>=0.115.8",
+    "filelock>=3.17.0",
+    "flatbuffers>=25.2.10",
+    "fsspec>=2025.2.0",
+    "gast>=0.6.0",
+    "google-pasta>=0.2.0",
+    "greenlet>=3.1.1",
+    "grpcio>=1.70.0",
+    "h11>=0.14.0",
+    "h5py>=3.13.0",
+    "httptools>=0.6.4",
+    "huggingface-hub>=0.29.0",
+    "idna>=3.10",
+    "Jinja2>=3.1.5",
+    "keras>=3.8.0",
+    "langdetect>=1.0.9",
+    "libclang>=18.1.1",
+    "Mako>=1.3.9",
+    "Markdown>=3.7",
+    "markdown-it-py>=3.0.0",
+    "MarkupSafe>=3.0.2",
+    "mdurl>=0.1.2",
+    "ml-dtypes>=0.4.1",
+    "mpmath>=1.3.0",
+    "mss>=10.0.0",
+    "namex>=0.0.8",
+    "networkx>=3.4.2",
+    "numpy>=2.0.2",
+    "onnx>=1.17.0",
+    "opencv-python>=4.11.0.86",
+    "opt_einsum>=3.4.0",
+    "optree>=0.14.0",
+    "packaging>=24.2",
+    "pillow>=11.1.0",
+    "protobuf>=3.20.3",
+    "psutil>=7.0.0",
+    "pyclipper>=1.3.0",
+    "pydantic>=2.10.6",
+    "pydantic_core>=2.27.2",
+    "Pygments>=2.19.1",
+    "pypdfium2>=4.30.1",
+    "python-doctr>=0.11.0",
+    "python-dotenv>=1.0.1",
+    "python-multipart>=0.0.20",
+    "pywin32>=308",
+    "PyYAML>=6.0.2",
+    "RapidFuzz>=3.12.1",
+    "regex>=2024.11.6",
+    "requests>=2.32.3",
+    "rich>=13.9.4",
+    "safetensors>=0.5.3",
+    "scipy>=1.15.2",
+    "shapely>=2.0.7",
+    "six>=1.17.0",
+    "sniffio>=1.3.1",
+    "SQLAlchemy>=2.0.38",
+    "starlette>=0.45.3",
+    "sympy>=1.13.1",
+    "tokenizers>=0.21.0",
+    "torch>=2.6.0",
+    "torchvision>=0.21.0",
+    "tqdm>=4.67.1",
+    "transformers>=4.49.0",
+    "typing_extensions>=4.12.2",
+    "urllib3>=2.3.0",
+    "uvicorn>=0.34.0",
+    "watchfiles>=1.0.4",
+    "websockets>=15.0",
+    "Werkzeug>=3.1.3",
+    "Whoosh-Reloaded>=2.7.5",
+    "wrapt>=1.17.2",
+    "toga>=0.4.0",
+]
+
+[tool.briefcase.app.open_recall.macOS]
+requires = [
+    "toga-cocoa>=0.4.0",
+    "std-nslog>=1.0.0",
+]
+
+[tool.briefcase.app.open_recall.linux]
+requires = [
+    "toga-gtk>=0.4.0",
+]
+
+[tool.briefcase.app.open_recall.linux.system.debian]
+system_requires = [
+    "libgirepository1.0-dev",
+    "libcairo2-dev",
+    "libpango1.0-dev",
+    "libwebkit2gtk-4.0-dev",
+    "gir1.2-webkit2-4.0",
+]
+
+[tool.briefcase.app.open_recall.linux.system.fedora]
+system_requires = [
+    "gobject-introspection-devel",
+    "cairo-devel",
+    "pango-devel",
+    "webkit2gtk3-devel",
+]
+
+[tool.briefcase.app.open_recall.linux.system.arch]
+system_requires = [
+    "gobject-introspection",
+    "cairo",
+    "pango",
+    "webkit2gtk",
+]
+
+[tool.briefcase.app.open_recall.windows]
+requires = [
+    "toga-winforms>=0.4.0",
+]
+
+# Mobile deployments
+[tool.briefcase.app.open_recall.iOS]
+requires = [
+    "toga-iOS>=0.4.0",
+    "std-nslog>=1.0.0",
+]
+
+[tool.briefcase.app.open_recall.android]
+requires = [
+    "toga-android>=0.4.0",
+]
+
+# Web deployment
+[tool.briefcase.app.open_recall.web]
+requires = [
+    "toga-web>=0.4.0",
+]
+style_framework = "Bootstrap v5.1"
+
+Briefcase Log:
+[00:08:05]                                                                                                                                                             config.py:563
+           *************************************************************************                                                                                   config.py:563
+           ** WARNING: License Definition for the Project is Deprecated           **                                                                                   config.py:563
+           *************************************************************************                                                                                   config.py:563
+                                                                                                                                                                       config.py:563
+               Briefcase now uses PEP 621 format for license definitions.                                                                                              config.py:563
+                                                                                                                                                                       config.py:563
+               Previously, the name of the license was assigned to the 'license'                                                                                       config.py:563
+               field in pyproject.toml. For PEP 621, the name of the license is                                                                                        config.py:563
+               assigned to 'license.text' or the name of the file containing the                                                                                       config.py:563
+               license is assigned to 'license.file'.                                                                                                                  config.py:563
+                                                                                                                                                                       config.py:563
+               The current configuration for the Project has a 'license' field                                                                                         config.py:563
+               that is specified as a string:                                                                                                                          config.py:563
+                                                                                                                                                                       config.py:563
+                   license = "MIT"                                                                                                                                     config.py:563
+                                                                                                                                                                       config.py:563
+               To use the PEP 621 format (and to remove this warning), specify that                                                                                    config.py:563
+               the LICENSE file contains the license for the Project:                                                                                                  config.py:563
+                                                                                                                                                                       config.py:563
+                   license.file = "LICENSE"                                                                                                                            config.py:563
+                                                                                                                                                                       config.py:563
+           *************************************************************************                                                                                   config.py:563
+[00:08:06]                                                                                                                                                             create.py:911
+[00:08:08] Application 'open_recall' already exists; overwrite [y/N]?                                                                                                 console.py:746
+           User input: y                                                                                                                                              console.py:746
+                                                                                                                                                                       create.py:920
+           [open_recall] Removing old application bundle...                                                                                                            create.py:920
+[00:08:17]                                                                                                                                                             create.py:923
+           [open_recall] Generating application template...                                                                                                            create.py:923
+           Assigning open_recall an application GUID of c92a1087-1895-5218-86d5-a8b4f2553f40                                                                          __init__.py:90
+           Using app template: https://github.com/beeware/briefcase-windows-app-template.git, branch v0.3.22                                                            base.py:1131
+[00:08:19] Using existing template (sha e3bb371eebd534a93ac0d9ecb4f28400f6ca97ba, updated Wed Jan 29 21:13:05 2025)                                                     base.py:1036
+                                                                                                                                                                       create.py:926
+           [open_recall] Installing support package...                                                                                                                 create.py:926
+           Using support package https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip                                                                create.py:355
+           python-3.11.9-embed-amd64.zip already downloaded                                                                                                              file.py:208
+           Unpacking support package... started                                                                                                                        create.py:270
+           Unpacking support package... done                                                                                                                           create.py:270
+                                                                                                                                                                       create.py:937
+           [open_recall] Installing stub binary...                                                                                                                     create.py:937
+           Using stub binary https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip                                                       create.py:466
+[00:08:30]                                                                                                                                                            __main__.py:42
+           Unable to download stub binary; is your computer offline?                                                                                                  __main__.py:43
+           Saving log... started                                                                                                                                      console.py:432
+
+Main thread traceback:
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_transports\default.py:101 in map_httpcore_exceptions                   │
+│                                                                                                                                                                                  │
+│    98 │   if len(HTTPCORE_EXC_MAP) == 0:                                                       ╭─────────────────── locals ───────────────────╮                                  │
+│    99 │   │   HTTPCORE_EXC_MAP = _load_httpcore_exceptions()                                   │ message = '[Errno 11001] getaddrinfo failed' │                                  │
+│   100 │   try:                                                                                 ╰──────────────────────────────────────────────╯                                  │
+│ ❱ 101 │   │   yield                                                                                                                                                              │
+│   102 │   except Exception as exc:                                                                                                                                               │
+│   103 │   │   mapped_exc = None                                                                                                                                                  │
+│   104                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_transports\default.py:250 in handle_request                            │
+│                                                                                                                                                                                  │
+│   247 │   │   │   extensions=request.extensions,                                                                                                                                 │
+│   248 │   │   )                                                                                                                                                                  │
+│   249 │   │   with map_httpcore_exceptions():                                                                                                                                    │
+│ ❱ 250 │   │   │   resp = self._pool.handle_request(req)                                                                                                                          │
+│   251 │   │                                                                                                                                                                      │
+│   252 │   │   assert isinstance(resp.stream, typing.Iterable)                                                                                                                    │
+│   253                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────────────────────────────────────── locals ────────────────────────────────────────────────────────────────────────────────╮       │
+│ │ httpcore = <module 'httpcore' from 'E:\\Open_Source_Contributions\\OpenRecall_MyProject\\codes\\fastapi_react_merge\\venv\\Lib\\site-packages\\httpcore\\__init__.py'> │       │
+│ │      req = <Request [b'GET']>                                                                                                                                          │       │
+│ │  request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')>                                                     │       │
+│ │     self = <httpx.HTTPTransport object at 0x0000027BD20E56D0>                                                                                                          │       │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯       │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_sync\connection_pool.py:256 in handle_request                       │
+│                                                                                                                                                                                  │
+│   253 │   │   │   │   closing = self._assign_requests_to_connections()                                                                                                           │
+│   254 │   │   │                                                                                                                                                                  │
+│   255 │   │   │   self._close_connections(closing)                                                                                                                               │
+│ ❱ 256 │   │   │   raise exc from None                                                                                                                                            │
+│   257 │   │                                                                                                                                                                      │
+│   258 │   │   # Return the response. Note that in this case we still have to manage                                                                                              │
+│   259 │   │   # the point at which the response is closed.                                                                                                                       │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────── locals ────────────────────────────────────────────╮                                                                               │
+│ │      closing = []                                                                              │                                                                               │
+│ │   connection = <HTTPConnection [CONNECTION FAILED]>                                            │                                                                               │
+│ │ pool_request = <httpcore._sync.connection_pool.PoolRequest object at 0x0000027BD2776810>       │                                                                               │
+│ │      request = <Request [b'GET']>                                                              │                                                                               │
+│ │       scheme = 'https'                                                                         │                                                                               │
+│ │         self = <ConnectionPool [Requests: 0 active, 0 queued | Connections: 0 active, 0 idle]> │                                                                               │
+│ │      timeout = 5.0                                                                             │                                                                               │
+│ │     timeouts = {'connect': 5.0, 'read': 5.0, 'write': 5.0, 'pool': 5.0}                        │                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                               │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_sync\connection_pool.py:236 in handle_request                       │
+│                                                                                                                                                                                  │
+│   233 │   │   │   │                                                                                                                                                              │
+│   234 │   │   │   │   try:                                                                                                                                                       │
+│   235 │   │   │   │   │   # Send the request on the assigned connection.                                                                                                         │
+│ ❱ 236 │   │   │   │   │   response = connection.handle_request(                                                                                                                  │
+│   237 │   │   │   │   │   │   pool_request.request                                                                                                                               │
+│   238 │   │   │   │   │   )                                                                                                                                                      │
+│   239 │   │   │   │   except ConnectionNotAvailable:                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────── locals ────────────────────────────────────────────╮                                                                               │
+│ │      closing = []                                                                              │                                                                               │
+│ │   connection = <HTTPConnection [CONNECTION FAILED]>                                            │                                                                               │
+│ │ pool_request = <httpcore._sync.connection_pool.PoolRequest object at 0x0000027BD2776810>       │                                                                               │
+│ │      request = <Request [b'GET']>                                                              │                                                                               │
+│ │       scheme = 'https'                                                                         │                                                                               │
+│ │         self = <ConnectionPool [Requests: 0 active, 0 queued | Connections: 0 active, 0 idle]> │                                                                               │
+│ │      timeout = 5.0                                                                             │                                                                               │
+│ │     timeouts = {'connect': 5.0, 'read': 5.0, 'write': 5.0, 'pool': 5.0}                        │                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                               │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_sync\connection.py:101 in handle_request                            │
+│                                                                                                                                                                                  │
+│    98 │   │   │   │   │   │   )                                                                ╭──────────────────── locals ────────────────────╮                                │
+│    99 │   │   except BaseException as exc:                                                     │ request = <Request [b'GET']>                   │                                │
+│   100 │   │   │   self._connect_failed = True                                                  │    self = <HTTPConnection [CONNECTION FAILED]> │                                │
+│ ❱ 101 │   │   │   raise exc                                                                    ╰────────────────────────────────────────────────╯                                │
+│   102 │   │                                                                                                                                                                      │
+│   103 │   │   return self._connection.handle_request(request)                                                                                                                    │
+│   104                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_sync\connection.py:78 in handle_request                             │
+│                                                                                                                                                                                  │
+│    75 │   │   try:                                                                             ╭──────────────────── locals ────────────────────╮                                │
+│    76 │   │   │   with self._request_lock:                                                     │ request = <Request [b'GET']>                   │                                │
+│    77 │   │   │   │   if self._connection is None:                                             │    self = <HTTPConnection [CONNECTION FAILED]> │                                │
+│ ❱  78 │   │   │   │   │   stream = self._connect(request)                                      ╰────────────────────────────────────────────────╯                                │
+│    79 │   │   │   │   │                                                                                                                                                          │
+│    80 │   │   │   │   │   ssl_object = stream.get_extra_info("ssl_object")                                                                                                       │
+│    81 │   │   │   │   │   http2_negotiated = (                                                                                                                                   │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_sync\connection.py:124 in _connect                                  │
+│                                                                                                                                                                                  │
+│   121 │   │   │   │   │   │   "socket_options": self._socket_options,                                                                                                            │
+│   122 │   │   │   │   │   }                                                                                                                                                      │
+│   123 │   │   │   │   │   with Trace("connect_tcp", logger, request, kwargs) as trace:                                                                                           │
+│ ❱ 124 │   │   │   │   │   │   stream = self._network_backend.connect_tcp(**kwargs)                                                                                               │
+│   125 │   │   │   │   │   │   trace.return_value = stream                                                                                                                        │
+│   126 │   │   │   │   else:                                                                                                                                                      │
+│   127 │   │   │   │   │   kwargs = {                                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────────────╮                                    │
+│ │       delays = <generator object exponential_backoff at 0x0000027BD270B5A0>                                                               │                                    │
+│ │       kwargs = {'host': 'briefcase-support.s3.amazonaws.com', 'port': 443, 'local_address': None, 'timeout': 5.0, 'socket_options': None} │                                    │
+│ │      request = <Request [b'GET']>                                                                                                         │                                    │
+│ │ retries_left = 0                                                                                                                          │                                    │
+│ │         self = <HTTPConnection [CONNECTION FAILED]>                                                                                       │                                    │
+│ │ sni_hostname = None                                                                                                                       │                                    │
+│ │      timeout = 5.0                                                                                                                        │                                    │
+│ │     timeouts = {'connect': 5.0, 'read': 5.0, 'write': 5.0, 'pool': 5.0}                                                                   │                                    │
+│ │        trace = <httpcore._trace.Trace object at 0x0000027BD2780E50>                                                                       │                                    │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                    │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_backends\sync.py:207 in connect_tcp                                 │
+│                                                                                                                                                                                  │
+│   204 │   │   │   OSError: ConnectError,                                                                                                                                         │
+│   205 │   │   }                                                                                                                                                                  │
+│   206 │   │                                                                                                                                                                      │
+│ ❱ 207 │   │   with map_exceptions(exc_map):                                                                                                                                      │
+│   208 │   │   │   sock = socket.create_connection(                                                                                                                               │
+│   209 │   │   │   │   address,                                                                                                                                                   │
+│   210 │   │   │   │   timeout,                                                                                                                                                   │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────────────╮                                             │
+│ │        address = ('briefcase-support.s3.amazonaws.com', 443)                                                                     │                                             │
+│ │        exc_map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>} │                                             │
+│ │           host = 'briefcase-support.s3.amazonaws.com'                                                                            │                                             │
+│ │  local_address = None                                                                                                            │                                             │
+│ │           port = 443                                                                                                             │                                             │
+│ │           self = <httpcore.SyncBackend object at 0x0000027BD251AB50>                                                             │                                             │
+│ │ socket_options = []                                                                                                              │                                             │
+│ │ source_address = None                                                                                                            │                                             │
+│ │        timeout = 5.0                                                                                                             │                                             │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                             │
+│                                                                                                                                                                                  │
+│ C:\Users\Friendship\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:155 in __exit__                                                                                    │
+│                                                                                                                                                                                  │
+│   152 │   │   │   │   # tell if we get the same exception back                                                                                                                   │
+│   153 │   │   │   │   value = typ()                                                                                                                                              │
+│   154 │   │   │   try:                                                                                                                                                           │
+│ ❱ 155 │   │   │   │   self.gen.throw(typ, value, traceback)                                                                                                                      │
+│   156 │   │   │   except StopIteration as exc:                                                                                                                                   │
+│   157 │   │   │   │   # Suppress StopIteration *unless* it's the same exception that                                                                                             │
+│   158 │   │   │   │   # was passed to throw().  This prevents a StopIteration                                                                                                    │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │      self = <contextlib._GeneratorContextManager object at 0x0000027BD2780D90> │                                                                                               │
+│ │ traceback = <traceback object at 0x0000027BD27811C0>                           │                                                                                               │
+│ │     value = gaierror(11001, 'getaddrinfo failed')                              │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpcore\_exceptions.py:14 in map_exceptions                                  │
+│                                                                                                                                                                                  │
+│   11 │   except Exception as exc:  # noqa: PIE786                                                                                                                                │
+│   12 │   │   for from_exc, to_exc in map.items():                                                                                                                                │
+│   13 │   │   │   if isinstance(exc, from_exc):                                                                                                                                   │
+│ ❱ 14 │   │   │   │   raise to_exc(exc) from exc                                                                                                                                  │
+│   15 │   │   raise  # pragma: nocover                                                                                                                                            │
+│   16                                                                                                                                                                             │
+│   17                                                                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────── locals ────────────────────────────────────────────────────────╮                                                        │
+│ │ map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>} │                                                        │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                        │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\integrations\file.py:177 in download                                │
+│                                                                                                                                                                                  │
+│   174 │   │   download_path.mkdir(parents=True, exist_ok=True)                                                                                                                   │
+│   175 │   │   filename: Path = None                                                                                                                                              │
+│   176 │   │   try:                                                                                                                                                               │
+│ ❱ 177 │   │   │   with self.tools.httpx.stream("GET", url, follow_redirects=True) as response:                                                                                   │
+│   178 │   │   │   │   if response.status_code == 404:                                                                                                                            │
+│   179 │   │   │   │   │   raise MissingNetworkResourceError(url=url)                                                                                                             │
+│   180 │   │   │   │   elif response.status_code != 200:                                                                                                                          │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────── locals ───────────────────────────────────────────────╮                                                                         │
+│ │   description = 'stub binary'                                                                        │                                                                         │
+│ │ download_path = WindowsPath('C:/Users/Friendship/AppData/Local/BeeWare/briefcase/Cache/stub')        │                                                                         │
+│ │      filename = None                                                                                 │                                                                         │
+│ │          hint = None                                                                                 │                                                                         │
+│ │          role = 'stub binary'                                                                        │                                                                         │
+│ │          self = <briefcase.integrations.file.File object at 0x0000027BD1B94E90>                      │                                                                         │
+│ │           url = 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.'+3 │                                                                         │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                         │
+│                                                                                                                                                                                  │
+│ C:\Users\Friendship\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:137 in __enter__                                                                                   │
+│                                                                                                                                                                                  │
+│   134 │   │   # they are only needed for recreation, which is not possible anymore             ╭───────────────────────────────── locals ──────────────────────────────────╮     │
+│   135 │   │   del self.args, self.kwds, self.func                                              │ self = <contextlib._GeneratorContextManager object at 0x0000027BD18C8950> │     │
+│   136 │   │   try:                                                                             ╰───────────────────────────────────────────────────────────────────────────╯     │
+│ ❱ 137 │   │   │   return next(self.gen)                                                                                                                                          │
+│   138 │   │   except StopIteration:                                                                                                                                              │
+│   139 │   │   │   raise RuntimeError("generator didn't yield") from None                                                                                                         │
+│   140                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_api.py:159 in stream                                                   │
+│                                                                                                                                                                                  │
+│   156 │   │   timeout=timeout,                                                                                                                                                   │
+│   157 │   │   trust_env=trust_env,                                                                                                                                               │
+│   158 │   ) as client:                                                                                                                                                           │
+│ ❱ 159 │   │   with client.stream(                                                                                                                                                │
+│   160 │   │   │   method=method,                                                                                                                                                 │
+│   161 │   │   │   url=url,                                                                                                                                                       │
+│   162 │   │   │   content=content,                                                                                                                                               │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────── locals ─────────────────────────────────────────────────╮                                                                      │
+│ │             auth = None                                                                                 │                                                                      │
+│ │           client = <httpx.Client object at 0x0000027BCE85B510>                                          │                                                                      │
+│ │          content = None                                                                                 │                                                                      │
+│ │          cookies = None                                                                                 │                                                                      │
+│ │             data = None                                                                                 │                                                                      │
+│ │            files = None                                                                                 │                                                                      │
+│ │ follow_redirects = True                                                                                 │                                                                      │
+│ │          headers = None                                                                                 │                                                                      │
+│ │             json = None                                                                                 │                                                                      │
+│ │           method = 'GET'                                                                                │                                                                      │
+│ │           params = None                                                                                 │                                                                      │
+│ │            proxy = None                                                                                 │                                                                      │
+│ │          timeout = Timeout(timeout=5.0)                                                                 │                                                                      │
+│ │        trust_env = True                                                                                 │                                                                      │
+│ │              url = 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.'+3 │                                                                      │
+│ │           verify = True                                                                                 │                                                                      │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                      │
+│                                                                                                                                                                                  │
+│ C:\Users\Friendship\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:137 in __enter__                                                                                   │
+│                                                                                                                                                                                  │
+│   134 │   │   # they are only needed for recreation, which is not possible anymore             ╭───────────────────────────────── locals ──────────────────────────────────╮     │
+│   135 │   │   del self.args, self.kwds, self.func                                              │ self = <contextlib._GeneratorContextManager object at 0x0000027BD251C210> │     │
+│   136 │   │   try:                                                                             ╰───────────────────────────────────────────────────────────────────────────╯     │
+│ ❱ 137 │   │   │   return next(self.gen)                                                                                                                                          │
+│   138 │   │   except StopIteration:                                                                                                                                              │
+│   139 │   │   │   raise RuntimeError("generator didn't yield") from None                                                                                                         │
+│   140                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_client.py:868 in stream                                                │
+│                                                                                                                                                                                  │
+│    865 │   │   │   timeout=timeout,                                                                                                                                              │
+│    866 │   │   │   extensions=extensions,                                                                                                                                        │
+│    867 │   │   )                                                                                                                                                                 │
+│ ❱  868 │   │   response = self.send(                                                                                                                                             │
+│    869 │   │   │   request=request,                                                                                                                                              │
+│    870 │   │   │   auth=auth,                                                                                                                                                    │
+│    871 │   │   │   follow_redirects=follow_redirects,                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────╮                                                   │
+│ │             auth = None                                                                                                    │                                                   │
+│ │          content = None                                                                                                    │                                                   │
+│ │          cookies = None                                                                                                    │                                                   │
+│ │             data = None                                                                                                    │                                                   │
+│ │       extensions = None                                                                                                    │                                                   │
+│ │            files = None                                                                                                    │                                                   │
+│ │ follow_redirects = True                                                                                                    │                                                   │
+│ │          headers = None                                                                                                    │                                                   │
+│ │             json = None                                                                                                    │                                                   │
+│ │           method = 'GET'                                                                                                   │                                                   │
+│ │           params = None                                                                                                    │                                                   │
+│ │          request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')> │                                                   │
+│ │             self = <httpx.Client object at 0x0000027BCE85B510>                                                             │                                                   │
+│ │          timeout = <httpx._client.UseClientDefault object at 0x0000027BD1843A50>                                           │                                                   │
+│ │              url = 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.'+3                    │                                                   │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                   │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_client.py:914 in send                                                  │
+│                                                                                                                                                                                  │
+│    911 │   │                                                                                                                                                                     │
+│    912 │   │   auth = self._build_request_auth(request, auth)                                                                                                                    │
+│    913 │   │                                                                                                                                                                     │
+│ ❱  914 │   │   response = self._send_handling_auth(                                                                                                                              │
+│    915 │   │   │   request,                                                                                                                                                      │
+│    916 │   │   │   auth=auth,                                                                                                                                                    │
+│    917 │   │   │   follow_redirects=follow_redirects,                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────╮                                                   │
+│ │             auth = <httpx.Auth object at 0x0000027BD2761BD0>                                                               │                                                   │
+│ │ follow_redirects = True                                                                                                    │                                                   │
+│ │          request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')> │                                                   │
+│ │             self = <httpx.Client object at 0x0000027BCE85B510>                                                             │                                                   │
+│ │           stream = True                                                                                                    │                                                   │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                   │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_client.py:942 in _send_handling_auth                                   │
+│                                                                                                                                                                                  │
+│    939 │   │   │   request = next(auth_flow)                                                                                                                                     │
+│    940 │   │   │                                                                                                                                                                 │
+│    941 │   │   │   while True:                                                                                                                                                   │
+│ ❱  942 │   │   │   │   response = self._send_handling_redirects(                                                                                                                 │
+│    943 │   │   │   │   │   request,                                                                                                                                              │
+│    944 │   │   │   │   │   follow_redirects=follow_redirects,                                                                                                                    │
+│    945 │   │   │   │   │   history=history,                                                                                                                                      │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────╮                                                   │
+│ │             auth = <httpx.Auth object at 0x0000027BD2761BD0>                                                               │                                                   │
+│ │        auth_flow = <generator object Auth.sync_auth_flow at 0x0000027BD26FFD30>                                            │                                                   │
+│ │ follow_redirects = True                                                                                                    │                                                   │
+│ │          history = []                                                                                                      │                                                   │
+│ │          request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')> │                                                   │
+│ │             self = <httpx.Client object at 0x0000027BCE85B510>                                                             │                                                   │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                   │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_client.py:979 in _send_handling_redirects                              │
+│                                                                                                                                                                                  │
+│    976 │   │   │   for hook in self._event_hooks["request"]:                                                                                                                     │
+│    977 │   │   │   │   hook(request)                                                                                                                                             │
+│    978 │   │   │                                                                                                                                                                 │
+│ ❱  979 │   │   │   response = self._send_single_request(request)                                                                                                                 │
+│    980 │   │   │   try:                                                                                                                                                          │
+│    981 │   │   │   │   for hook in self._event_hooks["response"]:                                                                                                                │
+│    982 │   │   │   │   │   hook(response)                                                                                                                                        │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────╮                                                   │
+│ │ follow_redirects = True                                                                                                    │                                                   │
+│ │          history = []                                                                                                      │                                                   │
+│ │          request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')> │                                                   │
+│ │             self = <httpx.Client object at 0x0000027BCE85B510>                                                             │                                                   │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                   │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_client.py:1014 in _send_single_request                                 │
+│                                                                                                                                                                                  │
+│   1011 │   │   │   )                                                                                                                                                             │
+│   1012 │   │                                                                                                                                                                     │
+│   1013 │   │   with request_context(request=request):                                                                                                                            │
+│ ❱ 1014 │   │   │   response = transport.handle_request(request)                                                                                                                  │
+│   1015 │   │                                                                                                                                                                     │
+│   1016 │   │   assert isinstance(response.stream, SyncByteStream)                                                                                                                │
+│   1017                                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────╮                                                          │
+│ │   request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')> │                                                          │
+│ │      self = <httpx.Client object at 0x0000027BCE85B510>                                                             │                                                          │
+│ │     start = 1926876.659788                                                                                          │                                                          │
+│ │ transport = <httpx.HTTPTransport object at 0x0000027BD20E56D0>                                                      │                                                          │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                          │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_transports\default.py:249 in handle_request                            │
+│                                                                                                                                                                                  │
+│   246 │   │   │   content=request.stream,                                                                                                                                        │
+│   247 │   │   │   extensions=request.extensions,                                                                                                                                 │
+│   248 │   │   )                                                                                                                                                                  │
+│ ❱ 249 │   │   with map_httpcore_exceptions():                                                                                                                                    │
+│   250 │   │   │   resp = self._pool.handle_request(req)                                                                                                                          │
+│   251 │   │                                                                                                                                                                      │
+│   252 │   │   assert isinstance(resp.stream, typing.Iterable)                                                                                                                    │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────────────────────────────────────── locals ────────────────────────────────────────────────────────────────────────────────╮       │
+│ │ httpcore = <module 'httpcore' from 'E:\\Open_Source_Contributions\\OpenRecall_MyProject\\codes\\fastapi_react_merge\\venv\\Lib\\site-packages\\httpcore\\__init__.py'> │       │
+│ │      req = <Request [b'GET']>                                                                                                                                          │       │
+│ │  request = <Request('GET', 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.zip')>                                                     │       │
+│ │     self = <httpx.HTTPTransport object at 0x0000027BD20E56D0>                                                                                                          │       │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯       │
+│                                                                                                                                                                                  │
+│ C:\Users\Friendship\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:155 in __exit__                                                                                    │
+│                                                                                                                                                                                  │
+│   152 │   │   │   │   # tell if we get the same exception back                                                                                                                   │
+│   153 │   │   │   │   value = typ()                                                                                                                                              │
+│   154 │   │   │   try:                                                                                                                                                           │
+│ ❱ 155 │   │   │   │   self.gen.throw(typ, value, traceback)                                                                                                                      │
+│   156 │   │   │   except StopIteration as exc:                                                                                                                                   │
+│   157 │   │   │   │   # Suppress StopIteration *unless* it's the same exception that                                                                                             │
+│   158 │   │   │   │   # was passed to throw().  This prevents a StopIteration                                                                                                    │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────── locals ────────────────────────────────────╮                                                                                               │
+│ │      self = <contextlib._GeneratorContextManager object at 0x0000027BD2777550> │                                                                                               │
+│ │ traceback = <traceback object at 0x0000027BD2781300>                           │                                                                                               │
+│ │     value = ConnectError(gaierror(11001, 'getaddrinfo failed'))                │                                                                                               │
+│ ╰────────────────────────────────────────────────────────────────────────────────╯                                                                                               │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\httpx\_transports\default.py:118 in map_httpcore_exceptions                   │
+│                                                                                                                                                                                  │
+│   115 │   │   │   raise                                                                        ╭─────────────────── locals ───────────────────╮                                  │
+│   116 │   │                                                                                    │ message = '[Errno 11001] getaddrinfo failed' │                                  │
+│   117 │   │   message = str(exc)                                                               ╰──────────────────────────────────────────────╯                                  │
+│ ❱ 118 │   │   raise mapped_exc(message) from exc                                                                                                                                 │
+│   119                                                                                                                                                                            │
+│   120                                                                                                                                                                            │
+│   121 class ResponseStream(SyncByteStream):                                                                                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\__main__.py:27 in main                                              │
+│                                                                                                                                                                                  │
+│   24 │   │   │   Path.cwd() / "pyproject.toml",                                                                                                                                  │
+│   25 │   │   │   overrides=overrides,                                                                                                                                            │
+│   26 │   │   )                                                                                                                                                                   │
+│ ❱ 27 │   │   command(**options)                                                                                                                                                  │
+│   28 │   except HelpText as e:                                                                                                                                                   │
+│   29 │   │   console.info()                                                                                                                                                      │
+│   30 │   │   console.info(str(e))                                                                                                                                                │
+│                                                                                                                                                                                  │
+│ ╭──────────────────────────────────────────────── locals ────────────────────────────────────────────────╮                                                                       │
+│ │       command = <briefcase.platforms.windows.app.WindowsAppCreateCommand object at 0x0000027BD191AFD0> │                                                                       │
+│ │       console = <briefcase.console.Console object at 0x0000027BCE24FFD0>                               │                                                                       │
+│ │             e = NetworkFailure('download stub binary', None)                                           │                                                                       │
+│ │ extra_cmdline = []                                                                                     │                                                                       │
+│ │       options = {}                                                                                     │                                                                       │
+│ │     overrides = {}                                                                                     │                                                                       │
+│ │        result = 200                                                                                    │                                                                       │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                       │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\commands\create.py:988 in __call__                                  │
+│                                                                                                                                                                                  │
+│    985 │   │   else:                                                                                                                                                             │
+│    986 │   │   │   state = None                                                                                                                                                  │
+│    987 │   │   │   for app_name, app in sorted(self.apps.items()):                                                                                                               │
+│ ❱  988 │   │   │   │   state = self.create_app(app, **full_options(state, options))                                                                                              │
+│    989 │   │                                                                                                                                                                     │
+│    990 │   │   return state                                                                                                                                                      │
+│    991                                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────── locals ──────────────────────────────────────────────╮                                                                            │
+│ │      app = <com.openrecall.open-recall v1.0.0 AppConfig>                                          │                                                                            │
+│ │ app_name = 'open_recall'                                                                          │                                                                            │
+│ │  options = {}                                                                                     │                                                                            │
+│ │     self = <briefcase.platforms.windows.app.WindowsAppCreateCommand object at 0x0000027BD191AFD0> │                                                                            │
+│ │    state = None                                                                                   │                                                                            │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                            │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\commands\create.py:938 in create_app                                │
+│                                                                                                                                                                                  │
+│    935 │   │   │   pass                                                                                                                                                          │
+│    936 │   │   else:                                                                                                                                                             │
+│    937 │   │   │   self.console.info("Installing stub binary...", prefix=app.app_name)                                                                                           │
+│ ❱  938 │   │   │   self.install_stub_binary(app=app)                                                                                                                             │
+│    939 │   │                                                                                                                                                                     │
+│    940 │   │   # Verify the app after the app template and support package                                                                                                       │
+│    941 │   │   # are in place since the app tools may be dependent on them.                                                                                                      │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────────╮                                                     │
+│ │         app = <com.openrecall.open-recall v1.0.0 AppConfig>                                                              │                                                     │
+│ │ bundle_path = WindowsPath('E:/Open_Source_Contributions/OpenRecall_MyProject/Open_Recall/build/open_recall/windows/app') │                                                     │
+│ │     confirm = True                                                                                                       │                                                     │
+│ │     options = {}                                                                                                         │                                                     │
+│ │        self = <briefcase.platforms.windows.app.WindowsAppCreateCommand object at 0x0000027BD191AFD0>                     │                                                     │
+│ │   test_mode = False                                                                                                      │                                                     │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                     │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\commands\create.py:409 in install_stub_binary                       │
+│                                                                                                                                                                                  │
+│    406 │   │   :param app: The config object for the app                                                                                                                         │
+│    407 │   │   """                                                                                                                                                               │
+│    408 │   │   unbuilt_executable_path = self.unbuilt_executable_path(app)                                                                                                       │
+│ ❱  409 │   │   stub_binary_path = self._download_stub_binary(app)                                                                                                                │
+│    410 │   │                                                                                                                                                                     │
+│    411 │   │   with self.console.wait_bar("Installing stub binary..."):                                                                                                          │
+│    412 │   │   │   # Ensure the folder for the stub binary exists                                                                                                                │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────────────────── locals ──────────────────────────────────────────────────────────────────────╮                            │
+│ │                     app = <com.openrecall.open-recall v1.0.0 AppConfig>                                                                           │                            │
+│ │                    self = <briefcase.platforms.windows.app.WindowsAppCreateCommand object at 0x0000027BD191AFD0>                                  │                            │
+│ │ unbuilt_executable_path = WindowsPath('E:/Open_Source_Contributions/OpenRecall_MyProject/Open_Recall/build/open_recall/windows/app/src/Stub.exe') │                            │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                            │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\commands\create.py:484 in _download_stub_binary                     │
+│                                                                                                                                                                                  │
+│    481 │   │   │   │                                                                                                                                                             │
+│    482 │   │   │   │   # Download the stub binary, caching the result                                                                                                            │
+│    483 │   │   │   │   # in the user's briefcase stub cache directory.                                                                                                           │
+│ ❱  484 │   │   │   │   return self.tools.file.download(                                                                                                                          │
+│    485 │   │   │   │   │   url=stub_binary_url,                                                                                                                                  │
+│    486 │   │   │   │   │   download_path=download_path,                                                                                                                          │
+│    487 │   │   │   │   │   role="stub binary",                                                                                                                                   │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────── locals ────────────────────────────────────────────────────╮                                                                │
+│ │                  app = <com.openrecall.open-recall v1.0.0 AppConfig>                                          │                                                                │
+│ │   custom_stub_binary = False                                                                                  │                                                                │
+│ │        download_path = WindowsPath('C:/Users/Friendship/AppData/Local/BeeWare/briefcase/Cache/stub')          │                                                                │
+│ │                 self = <briefcase.platforms.windows.app.WindowsAppCreateCommand object at 0x0000027BD191AFD0> │                                                                │
+│ │ stub_binary_revision = 7                                                                                      │                                                                │
+│ │      stub_binary_url = 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.'+3   │                                                                │
+│ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                │
+│                                                                                                                                                                                  │
+│ E:\Open_Source_Contributions\OpenRecall_MyProject\codes\fastapi_react_merge\venv\Lib\site-packages\briefcase\integrations\file.py:231 in download                                │
+│                                                                                                                                                                                  │
+│   228 │   │   │   │   # Use the default hint for generic network communication errors                                                                                            │
+│   229 │   │   │   │   hint = None                                                                                                                                                │
+│   230 │   │   │                                                                                                                                                                  │
+│ ❱ 231 │   │   │   raise NetworkFailure(                                                                                                                                          │
+│   232 │   │   │   │   f"download {description}",                                                                                                                                 │
+│   233 │   │   │   │   hint,                                                                                                                                                      │
+│   234 │   │   │   ) from e                                                                                                                                                       │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────── locals ───────────────────────────────────────────────╮                                                                         │
+│ │   description = 'stub binary'                                                                        │                                                                         │
+│ │ download_path = WindowsPath('C:/Users/Friendship/AppData/Local/BeeWare/briefcase/Cache/stub')        │                                                                         │
+│ │      filename = None                                                                                 │                                                                         │
+│ │          hint = None                                                                                 │                                                                         │
+│ │          role = 'stub binary'                                                                        │                                                                         │
+│ │          self = <briefcase.integrations.file.File object at 0x0000027BD1B94E90>                      │                                                                         │
+│ │           url = 'https://briefcase-support.s3.amazonaws.com/python/3.11/windows/GUI-Stub-3.11-b7.'+3 │                                                                         │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+NetworkFailure: Unable to download stub binary; is your computer offline?
