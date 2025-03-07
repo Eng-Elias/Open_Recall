@@ -291,6 +291,14 @@ const App = () => {
   return (
     <div className="container-fluid">
       <div className="mb-4">
+        <div className="text-center py-2">
+          <img
+            src="/static/images/logo.png"
+            alt="OpenRecall Logo"
+            height="70"
+            className="ms-2"
+          />
+        </div>
         <SettingsPanel />
         <DeleteScreenshotsPanel
           onScreenshotsDeleted={handleScreenshotsDeleted}
