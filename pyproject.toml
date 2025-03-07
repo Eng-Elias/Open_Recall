@@ -3,17 +3,17 @@ requires = ["briefcase"]
 build-backend = "briefcase.bootstrap"
 
 [tool.briefcase]
-project_name = "OpenRecall"
-bundle = "com.openrecall"
+project_name = "Open_Recall"
+bundle = "org.openrecall"
 version = "1.0.0"
 url = "https://github.com/Eng-Elias/Open_Recall"
-license = "MIT"
-author = "OpenRecall Team"
-author_email = "info@openrecall.com"
+license = {file = "LICENSE"}
+author = "Eng. Elias Owis"
+author_email = "elias@engelias.website"
 
 [tool.briefcase.app.open_recall]
-formal_name = "OpenRecall"
-description = "A screenshot capture and management application"
+formal_name = "Open_Recall"
+description = "Find and analyze anything you've seen on your PC"
 icon = "open_recall/static/images/icon"
 sources = ["open_recall"]
 requires = [
