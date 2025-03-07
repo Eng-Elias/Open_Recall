@@ -30,7 +30,35 @@ Open_Recall is a powerful desktop application that helps you search, find and an
 
 1. Download the latest installer from the Releases page
 2. Run the installer and follow the on-screen instructions
-3. Launch OpenRecall from your Start Menu or Desktop shortcut
+3. Launch Open_Recall from your Start Menu or Desktop shortcut
+
+### Configuration
+
+Open_Recall uses port 8742 by default to avoid conflicts with other applications. You can change this in two ways:
+
+1. Set the `OPENRECALL_PORT` environment variable:
+   ```
+   # Windows
+   set OPENRECALL_PORT=9000
+   
+   # Linux/macOS
+   export OPENRECALL_PORT=9000
+   ```
+
+2. Edit the `config.json` file in the application directory:
+   ```json
+   {
+     "app": {
+       "port": 9000,
+       "host": "localhost",
+       "debug": false
+     }
+   }
+   ```
+
+Other configuration options:
+- `OPENRECALL_HOST`: Change the host interface (default: localhost)
+- `OPENRECALL_DEBUG`: Enable debug mode (set to "true")
 
 ### Development Setup
 

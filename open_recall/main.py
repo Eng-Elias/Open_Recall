@@ -35,10 +35,10 @@ def load_config():
             with open(config_path, 'r') as f:
                 config = json.load(f)
             return config
-        return {"app": {"port": 8000, "host": "localhost"}}
+        return {"app": {"port": 8742, "host": "localhost", "debug": False}}
     except Exception as e:
         print(f"Error loading config: {e}")
-        return {"app": {"port": 8000, "host": "localhost"}}
+        return {"app": {"port": 8742, "host": "localhost", "debug": False}}
 
 # Get configuration
 config = load_config()
