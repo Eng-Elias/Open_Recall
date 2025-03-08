@@ -9,14 +9,6 @@ from PIL import Image
 import platform
 import psutil
 
-# Try to import Windows-specific modules with fallback for other platforms
-try:
-    import win32gui
-    import win32process
-    WINDOWS_MODULES_AVAILABLE = True
-except ImportError:
-    WINDOWS_MODULES_AVAILABLE = False
-
 from .db_utils import get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
 from .summarization import generate_summary
@@ -53,27 +45,40 @@ class ScreenshotManager:
             os.makedirs(self.storage_path, exist_ok=True)
 
     def _get_active_window_info(self) -> tuple:
-        """Get active window information"""
-        # Check if running on Windows and if Windows modules are available
-        if platform.system() == "Windows" and WINDOWS_MODULES_AVAILABLE:
+        """Get active window information using platform-agnostic methods"""
+        try:
+            # Get the current process
+            current_pid = os.getpid()
+            
+            # Get information about the current process
+            process = psutil.Process(current_pid)
+            app_name = process.name()
+            
+            # Try to get parent process information for better context
             try:
-                hwnd = win32gui.GetForegroundWindow()
-                _, pid = win32process.GetWindowThreadProcessId(hwnd)
-                app_name = psutil.Process(pid).name()
-                window_title = win32gui.GetWindowText(hwnd)
-                return app_name, window_title
-            except Exception as e:
-                print(f"Error getting window info: {e}")
-                return "unknown", "unknown"
-        else:
-            # Fallback for non-Windows platforms or when modules aren't available
+                parent = process.parent()
+                if parent:
+                    parent_name = parent.name()
+                    app_name = f"{parent_name} > {app_name}"
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                pass
+                
+            # For window title, we'll use a generic approach
+            # Since we can't reliably get the window title cross-platform without
+            # platform-specific libraries, we'll use the process command line
             try:
-                # Try to get at least the process name using psutil
-                current_process = psutil.Process()
-                app_name = current_process.name()
-                return app_name, "Open_Recall"
-            except:
-                return "Open_Recall", "Open_Recall"
+                cmdline = process.cmdline()
+                window_title = " ".join(cmdline) if cmdline else "Open_Recall"
+                # Truncate if too long
+                if len(window_title) > 100:
+                    window_title = window_title[:97] + "..."
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                window_title = "Open_Recall"
+                
+            return app_name, window_title
+        except Exception as e:
+            print(f"Error getting window info: {e}")
+            return "Open_Recall", "Open_Recall"
 
     def _calculate_image_similarity(self, img1: np.ndarray, img2: np.ndarray) -> float:
         """Calculate structural similarity between two images"""
