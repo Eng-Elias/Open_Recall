@@ -27,20 +27,40 @@ run_desktop:
 run_web_dev:
 	python -m open_recall.main
 
+# Backup and modify __main__.py for desktop app
+prepare_desktop_main:
+	@echo "Backing up __main__.py..."
+	@copy open_recall\__main__.py open_recall\__main__.py.bak
+	@echo "Updating __main__.py for desktop app..."
+	@echo import sys > open_recall\__main__.py
+	@echo from open_recall.app import main >> open_recall\__main__.py
+	@echo. >> open_recall\__main__.py
+	@echo if __name__ == "__main__": >> open_recall\__main__.py
+	@echo     sys.exit(main^(^)) >> open_recall\__main__.py
+
+# Restore original __main__.py
+restore_main:
+	@echo "Restoring original __main__.py..."
+	@copy open_recall\__main__.py.bak open_recall\__main__.py
+	@del open_recall\__main__.py.bak
+
 # Run the application in briefcase dev mode
-run_desktop_dev:
-	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase dev
+run_desktop_dev: prepare_desktop_main
+	briefcase dev
+	$(MAKE) restore_main
 
 # Build the application with Briefcase
-build_desktop:
-	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase create
-	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase build
+build_desktop: prepare_desktop_main
+	briefcase create
+	briefcase build
+	$(MAKE) restore_main
 
 # Package the application as an installer
-package_desktop: clean
-	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase create
-	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase build
-	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase package
+package_desktop: clean prepare_desktop_main
+	briefcase create
+	briefcase build
+	briefcase package
+	$(MAKE) restore_main
 
 # Install package in development mode
 install-dev:
