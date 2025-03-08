@@ -9,30 +9,30 @@ help:
 	@echo "==================="
 	@echo ""
 	@echo "Available commands:"
-	@echo "  make run         - Run the application in development mode"
-	@echo "  make dev         - Run the application with hot reloading"
-	@echo "  make build       - Build the application with Briefcase"
-	@echo "  make package     - Package the application as an installer"
-	@echo "  make pypi-build  - Build the Python package for PyPI"
-	@echo "  make pypi-upload - Upload the package to PyPI"
-	@echo "  make clean       - Clean build artifacts"
+	@echo "  make run_desktop         - Run the application in development mode"
+	@echo "  make run_web_dev         - Run the application with hot reloading"
+	@echo "  make build_desktop       - Build the application with Briefcase"
+	@echo "  make package_desktop     - Package the application as an installer"
+	@echo "  make pypi-build          - Build the Python package for PyPI"
+	@echo "  make pypi-upload         - Upload the package to PyPI"
+	@echo "  make clean               - Clean build artifacts"
 	@echo ""
 
 # Run the application in development mode
-run:
+run_desktop:
 	python -m open_recall.app
 
 # Run the application with hot reloading
-dev:
+run_web_dev:
 	python -m open_recall.main
 
 # Build the application with Briefcase
-build:
+build_desktop:
 	briefcase create
 	briefcase build
 
 # Package the application as an installer
-package:
+package_desktop:
 	briefcase create
 	briefcase build
 	briefcase package
