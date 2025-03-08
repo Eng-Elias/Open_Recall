@@ -19,24 +19,28 @@ help:
 	@echo "  make clean               - Clean build artifacts"
 	@echo ""
 
-# Run the application in development mode
+# Run the application as desktop app
 run_desktop:
 	python -m open_recall.app
 
-# Run the application with hot reloading
+# Run the application as web server
 run_web_dev:
 	python -m open_recall.main
 
+# Run the application in briefcase dev mode
+run_desktop_dev:
+	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase dev
+
 # Build the application with Briefcase
 build_desktop:
-	briefcase create
-	briefcase build
+	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase create
+	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase build
 
 # Package the application as an installer
 package_desktop: clean
-	briefcase create
-	briefcase build
-	briefcase package
+	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase create
+	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase build
+	set IS_OPEN_RECALL_DESKTOP_APP=1 && briefcase package
 
 # Install package in development mode
 install-dev:
