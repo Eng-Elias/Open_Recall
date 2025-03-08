@@ -1,14 +1,5 @@
-venv/
-data/
-*.db
-logs/
+# Environment variables
 .env
-
-# Node.js
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
 
 # Python
 __pycache__/
@@ -16,7 +7,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -33,12 +23,26 @@ wheels/
 .installed.cfg
 *.egg
 
-# IDE
-.vscode/
+# Virtual environments
+venv/
+env/
+ENV/
+test_venv/
+
+# Logs
+logs/
+*.log
+
+# IDE files
 .idea/
+.vscode/
 *.swp
 *.swo
 
-# OS
+# OS specific
 .DS_Store
 Thumbs.db
+
+# Project specific
+data/
+*.db
