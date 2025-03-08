@@ -2,6 +2,7 @@ venv/
 data/
 *.db
 logs/
+.env
 
 # Node.js
 node_modules/
