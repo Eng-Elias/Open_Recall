@@ -24,6 +24,16 @@ Open_Recall is a powerful desktop application that helps you search, find and an
 └── README.md              # This file
 ```
 
+## TO DO List
+
+- [x] web app
+- [x] desktop app
+- [x] CLI app
+- [ ] contribution guide
+- [ ] git hooks (for code formating and linting)
+- [ ] customize the installer file
+- [ ] installer files for different platforms
+
 ## Installation Options
 
 Open_Recall can be installed and used in two ways:
