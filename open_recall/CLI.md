@@ -2,6 +2,8 @@
 
 Open_Recall provides a command-line interface (CLI) that allows you to interact with the application directly from your terminal.
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/Eng-Elias/Open_Recall)
+
 ## Installation
 
 After installing the Open_Recall package, the `open_recall` command will be available in your terminal:
@@ -23,7 +25,7 @@ open_recall server [--host HOST] [--port PORT] [--no-browser]
 Options:
 
 - `--host`: Specify the host to bind the server to (default: from config or 127.0.0.1)
-- `--port`: Specify the port to bind the server to (default: from config or 8000)
+- `--port`: Specify the port to bind the server to (default: from config or 8742)
 - `--no-browser`: Don't open a browser window automatically
 
 ### Launch Desktop Application
@@ -46,7 +48,7 @@ open_recall version
 
 ## Environment Variables
 
-Open_Recall CLI also respects the following environment variables:
+Open_Recall CLI respects the following environment variables:
 
 - `OPEN_RECALL_HOST`: Host to bind the server to
 - `OPEN_RECALL_PORT`: Port to bind the server to
@@ -70,5 +72,13 @@ open_recall server --no-browser
 For development purposes, you can also run the CLI directly from the source code:
 
 ```bash
-python -m open_recall.cli server
+# Install in development mode
+pip install -e .
+
+# Run CLI commands
+python -m open_recall
 ```
+
+## Related Documentation
+
+For more information about Open_Recall, see the [main README](../README.md) file.

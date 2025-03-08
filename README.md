@@ -4,37 +4,41 @@
 
 Open_Recall is a powerful desktop application that helps you search, find and analyze anything you've seen on your PC. Using advanced search capabilities, you can easily locate past activities, documents, applications, and websites based on your memory fragments or timeline navigation.
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/Eng-Elias/Open_Recall)
+
 ## Project Structure
 
 ```
 .
-├── electron/          # Electron main process
-│   └── main.js       # Electron entry point
-├── open_recall/      # Python package
-│   ├── app.py        # Toga app entry point
-│   ├── main.py       # FastAPI application
-│   ├── static/       # Static files
-│   │   └── js/
-│   │       └── App.js # React components
-│   └── templates/
-│       └── index.html # Main template
-├── pyproject.toml    # Python project configuration for Briefcase
-├── requirements.txt  # Python dependencies
-├── package.json     # Node.js dependencies
-└── README.md         # This file
+├── open_recall/           # Python package
+│   ├── app.py             # Toga desktop app entry point
+│   ├── cli.py             # Command-line interface
+│   ├── main.py            # FastAPI application
+│   ├── static/            # Static files (CSS, JS, images)
+│   ├── templates/         # HTML templates
+│   └── utils/             # Utility modules
+├── pyproject.toml         # Python project configuration
+├── setup.py               # Package setup configuration
+├── requirements.txt       # Python dependencies
+├── Makefile               # Development and build commands
+└── README.md              # This file
 ```
 
-## Installation
+## Installation Options
 
-### Using the Installer
+Open_Recall can be installed and used in two ways:
 
-1. Download the latest installer from the Releases page
+### 1. Windows Desktop Application
+
+For the best user experience with a native GUI:
+
+1. Download the latest Windows installer from the [Releases page](https://github.com/Eng-Elias/Open_Recall/releases)
 2. Run the installer and follow the on-screen instructions
 3. Launch Open_Recall from your Start Menu or Desktop shortcut
 
-### Using as a Python Package
+### 2. Python Package (All Platforms)
 
-You can also install Open_Recall as a Python package:
+For cross-platform usage or integration with other tools:
 
 ```bash
 pip install open_recall
@@ -55,13 +59,13 @@ open_recall version
 
 For more details on CLI usage, see [CLI Documentation](open_recall/CLI.md).
 
-### Configuration
+## Configuration
 
 Open_Recall uses port 8742 by default to avoid conflicts with other applications. You can change this in two ways:
 
 1. Set the `OPEN_RECALL_PORT` environment variable:
 
-   ```
+   ```bash
    # Windows
    set OPEN_RECALL_PORT=9000
 
@@ -85,54 +89,80 @@ Other configuration options:
 - `OPEN_RECALL_HOST`: Change the host interface (default: localhost)
 - `OPEN_RECALL_DEBUG`: Enable debug mode (set to "true")
 
-### Development Setup
+## Development
+
+### Setup Development Environment
 
 1. Clone the repository:
 
-   ```
+   ```bash
    git clone https://github.com/Eng-Elias/Open_Recall.git
    cd Open_Recall
    ```
 
 2. Install Python dependencies:
 
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 
-3. Run the app in development mode:
-   ```
-   python -m open_recall.app
+3. Install the package in development mode:
+
+   ```bash
+   make install-dev
+   # or
+   pip install -e .
    ```
 
-## Packaging with Briefcase
+### Available Make Commands
 
-To create a standalone installer for distribution:
+The project includes a Makefile with useful commands for development and packaging:
 
-1. Install Briefcase:
+```bash
+# Run the desktop application in development mode
+make run_desktop
 
-   ```
-   pip install briefcase
-   ```
+# Run the web server with hot reloading
+make run_web_dev
 
-2. Create the application scaffold:
+# Build the desktop application with Briefcase
+make build_desktop
 
-   ```
-   briefcase create
-   ```
+# Package the application as a Windows installer
+make package_desktop
 
-3. Build the application:
+# Install the package in development mode
+make install-dev
 
-   ```
-   briefcase build
-   ```
+# Build the Python package for PyPI
+make pypi-build
 
-4. Package the application as an installer:
-   ```
-   briefcase package
-   ```
+# Upload the package to PyPI
+make pypi-upload
+
+# Clean build artifacts
+make clean
+```
+
+## Packaging and Distribution
+
+### Desktop Application (Windows)
+
+To create a standalone Windows installer:
+
+```bash
+make package_desktop
+```
 
 The packaged installer will be available in the `dist` directory.
+
+### Python Package (PyPI)
+
+To build and publish the Python package to PyPI:
+
+```bash
+make pypi-upload
+```
 
 ## License
 
