@@ -2,11 +2,10 @@ import os
 import time
 import threading
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import Optional
 import mss
 import numpy as np
 from PIL import Image
-import platform
 import psutil
 
 from .db_utils import get_db, screenshot_crud
