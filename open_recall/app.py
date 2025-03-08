@@ -22,8 +22,8 @@ from open_recall.utils.settings import BASE_DIR
 
 # Get configuration
 config = load_config()
-APP_PORT = int(os.environ.get('OPENRECALL_PORT', config['app']['port']))
-APP_HOST = os.environ.get('OPENRECALL_HOST', config['app']['host'])
+APP_PORT = int(os.environ.get('OPEN_RECALL_PORT', config['app']['port']))
+APP_HOST = os.environ.get('OPEN_RECALL_HOST', config['app']['host'])
 
 def find_free_port():
     """Find a free port if the default port is in use"""

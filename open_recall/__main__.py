@@ -1,10 +1,10 @@
 """
-Main entry point for the OpenRecall application when run as a module.
-This file is required by Briefcase to execute the package.
+Main entry point for the Open_Recall application when run as a module.
+This allows users to run the application with 'python -m open_recall'.
 """
 
-from open_recall.app import main
+import sys
+from open_recall.cli import main
 
 if __name__ == "__main__":
-    app = main()
-    app.main_loop()
+    sys.exit(main())
