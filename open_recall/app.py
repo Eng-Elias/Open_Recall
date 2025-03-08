@@ -171,7 +171,7 @@ class OpenRecallApp(toga.App):
         self.main_window.content = main_box
 
 def main():        
-    return OpenRecallApp(
+    app = OpenRecallApp(
         formal_name='Open_Recall',
         app_id='org.openrecall.open_recall',
         app_name='Open_Recall',
@@ -181,7 +181,7 @@ def main():
         description='Find and analyze anything you\'ve seen on your PC',
         icon=os.path.join(BASE_DIR, "static", "images", "icon")
     )
+    app.main_loop()
 
 if __name__ == '__main__':
-    app = main()
-    app.main_loop()
+    main()
