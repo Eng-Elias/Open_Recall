@@ -18,4 +18,14 @@ with io.open("open_recall/__init__.py", encoding="utf8") as version_file:
 setup(
     packages=find_packages(exclude=["logs", "test_venv", "venv", "build", "dist", "*.egg-info"]),
     include_package_data=True,
+    package_data={
+        "open_recall": [
+            "templates/*.html",
+            "static/css/*.css",
+            "static/js/*.js",
+            "static/js/libs/*.js",
+            "static/images/*.*",
+            "static/images/icon/*.*",
+        ],
+    },
 )

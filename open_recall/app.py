@@ -10,6 +10,7 @@ import time
 import os
 import warnings
 import socket
+from open_recall import __version__
 
 # Filter out specific warnings from third-party libraries
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="defusedxml")
@@ -175,7 +176,7 @@ def main():
         app_id='org.openrecall.open_recall',
         app_name='Open_Recall',
         author='Eng. Elias Owis',
-        version='1.0.0',
+        version=__version__,
         home_page='https://github.com/Eng-Elias/Open_Recall',
         description='Find and analyze anything you\'ve seen on your PC',
         icon=os.path.join(BASE_DIR, "static", "images", "icon")
