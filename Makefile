@@ -1,11 +1,11 @@
-# OpenRecall Makefile
+# Open_Recall Makefile
 # Provides shortcuts for common development and packaging tasks
 
-.PHONY: run dev build package pypi-build pypi-upload clean help
+.PHONY: run_desktop run_web_dev build_desktop package_desktop install-dev pypi-build pypi-upload clean dist
 
 # Default target
 help:
-	@echo "OpenRecall Makefile"
+	@echo "Open_Recall Makefile"
 	@echo "==================="
 	@echo ""
 	@echo "Available commands:"
@@ -13,6 +13,7 @@ help:
 	@echo "  make run_web_dev         - Run the application with hot reloading"
 	@echo "  make build_desktop       - Build the application with Briefcase"
 	@echo "  make package_desktop     - Package the application as an installer"
+	@echo "  make install-dev         - Install package in development mode"
 	@echo "  make pypi-build          - Build the Python package for PyPI"
 	@echo "  make pypi-upload         - Upload the package to PyPI"
 	@echo "  make clean               - Clean build artifacts"
@@ -32,18 +33,22 @@ build_desktop:
 	briefcase build
 
 # Package the application as an installer
-package_desktop:
+package_desktop: clean
 	briefcase create
 	briefcase build
 	briefcase package
 
+# Install package in development mode
+install-dev:
+	pip install -e .
+
 # Build the Python package for PyPI
-pypi-build:
+pypi-build: clean
 	python -m pip install --upgrade build
 	python -m build
 
 # Upload the package to PyPI
-pypi-upload:
+pypi-upload: clean pypi-build
 	python -m pip install --upgrade twine
 	python -m twine upload dist/*
 
@@ -67,7 +72,7 @@ clean_windows:
 	@echo "Cleaning build artifacts on Windows..."
 	@if exist build rmdir /s /q build
 	@if exist dist rmdir /s /q dist
-	@if exist *.egg-info rmdir /s /q *.egg-info
+	@for /d %%i in (*egg-info) do @if exist "%%i" rmdir /s /q "%%i"
 	@echo "Removing __pycache__ directories in open_recall..."
 	@for /d /r open_recall %%d in (__pycache__) do @if exist "%%d" rmdir /s /q "%%d"
 	@echo "Removing compiled Python files in open_recall..."
