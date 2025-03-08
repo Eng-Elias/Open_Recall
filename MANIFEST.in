@@ -2,11 +2,14 @@ include LICENSE
 include README.md
 include pyproject.toml
 include setup.py
+include open_recall/config.json
+include open_recall/settings.json
 
 recursive-include open_recall/templates *
 recursive-include open_recall/static *
 recursive-include open_recall/data *
 recursive-include open_recall/alembic *
+recursive-include open_recall/utils *
 
 global-exclude *.pyc
 global-exclude __pycache__
