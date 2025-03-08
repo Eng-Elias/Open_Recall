@@ -177,7 +177,8 @@ def main():
         author='Eng. Elias Owis',
         version='1.0.0',
         home_page='https://github.com/Eng-Elias/Open_Recall',
-        description='Find and analyze anything you\'ve seen on your PC'
+        description='Find and analyze anything you\'ve seen on your PC',
+        icon=os.path.join(BASE_DIR, "static", "images", "icon")
     )
 
 if __name__ == '__main__':
