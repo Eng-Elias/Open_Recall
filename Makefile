@@ -48,14 +48,48 @@ pypi-upload:
 	python -m twine upload dist/*
 
 # Clean build artifacts
-clean:
+clean_linux:
+	@echo "Cleaning build artifacts on Linux/macOS..."
 	rm -rf build/
 	rm -rf dist/
 	rm -rf *.egg-info/
-	find . -type d -name __pycache__ -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
-	find . -type f -name "*.pyo" -delete
-	find . -type f -name "*.pyd" -delete
-	find . -type f -name ".coverage" -delete
-	find . -type d -name "*.egg-info" -exec rm -rf {} +
-	find . -type d -name "*.egg" -exec rm -rf {} +
+	find open_recall -type d -name __pycache__ -exec rm -rf {} +
+	find open_recall -type f -name "*.pyc" -delete
+	find open_recall -type f -name "*.pyo" -delete
+	find open_recall -type f -name "*.pyd" -delete
+	find open_recall -type f -name ".coverage" -delete
+	find open_recall -type d -name "*.egg-info" -exec rm -rf {} +
+	find open_recall -type d -name "*.egg" -exec rm -rf {} +
+	rm -rf open_recall/data/screenshots/*
+	rm -f open_recall/openrecall.db
+
+clean_windows:
+	@echo "Cleaning build artifacts on Windows..."
+	@if exist build rmdir /s /q build
+	@if exist dist rmdir /s /q dist
+	@if exist *.egg-info rmdir /s /q *.egg-info
+	@echo "Removing __pycache__ directories in open_recall..."
+	@for /d /r open_recall %%d in (__pycache__) do @if exist "%%d" rmdir /s /q "%%d"
+	@echo "Removing compiled Python files in open_recall..."
+	@del /s /q open_recall\*.pyc 2>nul || echo No .pyc files found
+	@del /s /q open_recall\*.pyo 2>nul || echo No .pyo files found
+	@del /s /q open_recall\*.pyd 2>nul || echo No .pyd files found
+	@del /s /q open_recall\.coverage 2>nul || echo No .coverage files found
+	@echo "Cleaning application data..."
+	@if exist open_recall\data\screenshots rmdir /s /q open_recall\data\screenshots
+	@if not exist open_recall\data mkdir open_recall\data
+	@if not exist open_recall\data\screenshots mkdir open_recall\data\screenshots
+	@echo "Created empty screenshots directory"
+	@if exist open_recall\openrecall.db del /q open_recall\openrecall.db
+	@echo "Clean completed successfully!"
+
+# Main clean command that detects OS
+ifeq ($(OS),Windows_NT)
+clean:
+	@echo "Detected Windows environment"
+	@$(MAKE) clean_windows
+else
+clean:
+	@echo "Detected Unix-like environment"
+	@$(MAKE) clean_linux
+endif
