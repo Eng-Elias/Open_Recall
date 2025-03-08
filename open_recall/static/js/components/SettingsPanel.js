@@ -193,7 +193,7 @@ const SettingsPanel = () => {
                 </label>
                 <small className="text-muted d-block mt-1">
                   <i className="bi bi-info-circle me-1"></i>
-                  When enabled, OpenRecall will generate summaries of your
+                  When enabled, Open_Recall will generate summaries of your
                   screenshots
                 </small>
               </div>
@@ -202,10 +202,7 @@ const SettingsPanel = () => {
               {settings.enable_summarization && (
                 <>
                   <div className="mb-3">
-                    <label
-                      htmlFor="summarization_model"
-                      className="form-label"
-                    >
+                    <label htmlFor="summarization_model" className="form-label">
                       Summarization Model
                     </label>
                     <select

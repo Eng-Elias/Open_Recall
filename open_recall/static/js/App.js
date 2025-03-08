@@ -294,7 +294,7 @@ const App = () => {
         <div className="text-center py-2">
           <img
             src="/static/images/logo.png"
-            alt="OpenRecall Logo"
+            alt="Open_Recall Logo"
             height="70"
             className="ms-2"
           />

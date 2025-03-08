@@ -71,9 +71,9 @@ class ScreenshotManager:
                 # Try to get at least the process name using psutil
                 current_process = psutil.Process()
                 app_name = current_process.name()
-                return app_name, "OpenRecall"
+                return app_name, "Open_Recall"
             except:
-                return "OpenRecall", "OpenRecall"
+                return "Open_Recall", "Open_Recall"
 
     def _calculate_image_similarity(self, img1: np.ndarray, img2: np.ndarray) -> float:
         """Calculate structural similarity between two images"""

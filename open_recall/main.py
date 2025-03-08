@@ -42,9 +42,9 @@ def load_config():
 
 # Get configuration
 config = load_config()
-APP_PORT = int(os.environ.get('OPENRECALL_PORT', config['app']['port']))
-APP_HOST = os.environ.get('OPENRECALL_HOST', config['app']['host'])
-APP_DEBUG = os.environ.get('OPENRECALL_DEBUG', '').lower() == 'true'
+APP_PORT = int(os.environ.get('OPEN_RECALL_PORT', config['app']['port']))
+APP_HOST = os.environ.get('OPEN_RECALL_HOST', config['app']['host'])
+APP_DEBUG = os.environ.get('OPEN_RECALL_DEBUG', '').lower() == 'true'
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
