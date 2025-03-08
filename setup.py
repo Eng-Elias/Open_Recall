@@ -14,13 +14,14 @@ with io.open("open_recall/__init__.py", encoding="utf8") as version_file:
         raise RuntimeError("Unable to find version string.")
 
 setup(
-    name="openrecall",
+    name="open_recall",
     version=version,
-    description="A screenshot capture and management application",
+    description="Find and analyze anything you've seen on your PC",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="OpenRecall Team",
-    author_email="info@openrecall.com",
+    author="Eng. Elias Owis",
+    author_email="elias@engelias.website",
+    url="https://github.com/Eng-Elias/Open_Recall",
     license="MIT",
     packages=find_packages(
         exclude=[
@@ -70,4 +71,9 @@ setup(
         ],
     },
     include_package_data=True,
+    entry_points={
+        "console_scripts": [
+            "open_recall=open_recall.cli:main",
+        ],
+    },
 )
