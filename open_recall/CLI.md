@@ -9,7 +9,7 @@ Open_Recall provides a command-line interface (CLI) that allows you to interact 
 After installing the Open_Recall package, the `open_recall` command will be available in your terminal:
 
 ```bash
-pip install open_recall
+pip install open-recall-cli
 ```
 
 ## Available Commands

@@ -41,7 +41,7 @@ For the best user experience with a native GUI:
 For cross-platform usage or integration with other tools:
 
 ```bash
-pip install open_recall
+pip install open-recall-cli
 ```
 
 After installation, you can use the `open_recall` command-line interface:
