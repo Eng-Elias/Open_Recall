@@ -1,8 +1,21 @@
 # Open_Recall
 
+<p align="center">
+  <img src="open_recall/static/images/logo.png" alt="Open_Recall Logo" width="200">
+</p>
+
 ## Overview
 
 Open_Recall is a powerful desktop application that helps you search, find and analyze anything you've seen on your PC. Using advanced search capabilities, you can easily locate past activities, documents, applications, and websites based on your memory fragments or timeline navigation.
+
+<p align="center">
+  <a href="https://youtu.be/mqYihFedxmY">
+    <img src="https://img.youtube.com/vi/mqYihFedxmY/0.jpg" alt="Open_Recall Demo Video" width="600">
+  </a>
+</p>
+<p align="center">
+  <a href="https://youtu.be/mqYihFedxmY">Watch the Open_Recall Demo on YouTube</a>
+</p>
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/Eng-Elias/Open_Recall)
 
