@@ -63,16 +63,16 @@ package_desktop: clean prepare_desktop_main
 	$(MAKE) restore_main
 
 # Install package in development mode
-install-dev:
+install_dev:
 	pip install -e .
 
 # Build the Python package for PyPI
-pypi-build: clean
+pypi_build: clean
 	python -m pip install --upgrade build
 	python -m build
 
 # Upload the package to PyPI
-pypi-upload: clean pypi-build
+pypi_upload: clean pypi_build
 	python -m pip install --upgrade twine
 	python -m twine upload dist/*
 
