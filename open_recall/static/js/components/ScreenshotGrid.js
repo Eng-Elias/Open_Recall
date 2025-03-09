@@ -82,7 +82,7 @@ const ScreenshotGrid = ({
                   </span>
                 </div>
                 <p className="card-text small text-muted">
-                  {new Date(screenshot.timestamp).toLocaleString()}
+                  {moment(screenshot.timestamp + "Z").calendar()}
                 </p>
                 <div className="tags-container">
                   {screenshot.tags.map((tag) => (
