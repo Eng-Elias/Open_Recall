@@ -27,7 +27,7 @@ const App = () => {
     TAG_REMOVED: "tag_removed",
     SCREENSHOTS_DELETED: "screenshots_deleted",
     SETTINGS_UPDATED: "settings_updated",
-    NEW_SCREENSHOT: "new_screenshot"
+    NEW_SCREENSHOT: "new_screenshot",
   };
 
   // Check if a screenshot matches current filters
@@ -144,10 +144,7 @@ const App = () => {
           if (matchesFilters(data.screenshot)) {
             setScreenshots((prev) => ({
               ...prev,
-              items: [data.screenshot, ...prev.items].slice(
-                0,
-                prev.items.length
-              ),
+              items: [data.screenshot, ...prev.items],
               total: prev.total + 1,
               pages: Math.ceil((prev.total + 1) / 12),
             }));
@@ -158,7 +155,7 @@ const App = () => {
           // Handle settings update if needed
           console.log("Settings updated:", data.settings);
           break;
-          
+
         case EventType.SCREENSHOTS_DELETED:
           // Remove deleted screenshots from the UI
           setScreenshots((prev) => {
@@ -175,7 +172,7 @@ const App = () => {
             return prev;
           });
           break;
-          
+
         case EventType.NOTES_UPDATED:
           // Update notes for a screenshot
           setScreenshots((prev) => {
@@ -190,7 +187,7 @@ const App = () => {
             };
           });
           break;
-          
+
         case EventType.TAG_DELETED:
           // Remove the deleted tag from all screenshots
           setScreenshots((prev) => {
@@ -204,9 +201,7 @@ const App = () => {
             };
           });
           // Also remove from allTags
-          setAllTags((prev) => 
-            prev.filter((tag) => tag.id !== data.tag_id)
-          );
+          setAllTags((prev) => prev.filter((tag) => tag.id !== data.tag_id));
           break;
       }
     };
