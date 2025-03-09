@@ -18,6 +18,18 @@ const App = () => {
   const [ws, setWs] = React.useState(null);
   const [selectedScreenshot, setSelectedScreenshot] = React.useState(null);
 
+  // Define event types as constants to avoid typos and improve maintainability
+  const EventType = {
+    TAG_DELETED: "tag_deleted",
+    FAVORITE_UPDATED: "favorite_updated",
+    NOTES_UPDATED: "notes_updated",
+    TAG_ADDED: "tag_added",
+    TAG_REMOVED: "tag_removed",
+    SCREENSHOTS_DELETED: "screenshots_deleted",
+    SETTINGS_UPDATED: "settings_updated",
+    NEW_SCREENSHOT: "new_screenshot"
+  };
+
   // Check if a screenshot matches current filters
   const matchesFilters = (screenshot) => {
     // App name filter
@@ -78,7 +90,7 @@ const App = () => {
       const data = JSON.parse(event.data);
 
       switch (data.type) {
-        case "favorite_updated":
+        case EventType.FAVORITE_UPDATED:
           setScreenshots((prev) => {
             const updatedItems = prev.items.map((screenshot) =>
               screenshot.id === data.screenshot_id
@@ -92,7 +104,7 @@ const App = () => {
           });
           break;
 
-        case "tag_added":
+        case EventType.TAG_ADDED:
           setScreenshots((prev) => {
             const updatedItems = prev.items.map((screenshot) =>
               screenshot.id === data.screenshot_id
@@ -109,7 +121,7 @@ const App = () => {
           });
           break;
 
-        case "tag_removed":
+        case EventType.TAG_REMOVED:
           setScreenshots((prev) => {
             const updatedItems = prev.items.map((screenshot) =>
               screenshot.id === data.screenshot_id
@@ -128,7 +140,7 @@ const App = () => {
           });
           break;
 
-        case "new_screenshot":
+        case EventType.NEW_SCREENSHOT:
           if (matchesFilters(data.screenshot)) {
             setScreenshots((prev) => ({
               ...prev,
@@ -142,9 +154,59 @@ const App = () => {
           }
           break;
 
-        case "settings_updated":
+        case EventType.SETTINGS_UPDATED:
           // Handle settings update if needed
           console.log("Settings updated:", data.settings);
+          break;
+          
+        case EventType.SCREENSHOTS_DELETED:
+          // Remove deleted screenshots from the UI
+          setScreenshots((prev) => {
+            if (data.ids && Array.isArray(data.ids)) {
+              return {
+                ...prev,
+                items: prev.items.filter(
+                  (screenshot) => !data.ids.includes(screenshot.id)
+                ),
+                total: Math.max(0, prev.total - data.count),
+                pages: Math.max(1, Math.ceil((prev.total - data.count) / 12)),
+              };
+            }
+            return prev;
+          });
+          break;
+          
+        case EventType.NOTES_UPDATED:
+          // Update notes for a screenshot
+          setScreenshots((prev) => {
+            const updatedItems = prev.items.map((screenshot) =>
+              screenshot.id === data.screenshot_id
+                ? { ...screenshot, notes: data.notes }
+                : screenshot
+            );
+            return {
+              ...prev,
+              items: updatedItems,
+            };
+          });
+          break;
+          
+        case EventType.TAG_DELETED:
+          // Remove the deleted tag from all screenshots
+          setScreenshots((prev) => {
+            const updatedItems = prev.items.map((screenshot) => ({
+              ...screenshot,
+              tags: screenshot.tags.filter((tag) => tag.id !== data.tag_id),
+            }));
+            return {
+              ...prev,
+              items: updatedItems,
+            };
+          });
+          // Also remove from allTags
+          setAllTags((prev) => 
+            prev.filter((tag) => tag.id !== data.tag_id)
+          );
           break;
       }
     };

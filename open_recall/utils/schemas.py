@@ -1,8 +1,20 @@
 from datetime import datetime
 from typing import List, Generic, TypeVar
 from pydantic import BaseModel, ConfigDict
+from enum import Enum
 
 T = TypeVar('T')
+
+class EventType(str, Enum):
+    """WebSocket event types for real-time updates"""
+    TAG_DELETED = "tag_deleted"
+    FAVORITE_UPDATED = "favorite_updated"
+    NOTES_UPDATED = "notes_updated"
+    TAG_ADDED = "tag_added"
+    TAG_REMOVED = "tag_removed"
+    SCREENSHOTS_DELETED = "screenshots_deleted"
+    SETTINGS_UPDATED = "settings_updated"
+    NEW_SCREENSHOT = "new_screenshot"
 
 class TagBase(BaseModel):
     name: str

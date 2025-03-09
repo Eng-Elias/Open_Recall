@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from open_recall.utils.screenshot_utils import screenshot_manager
 from open_recall.utils.db_utils import Base, engine, get_db, Screenshot, Tag
-from open_recall.utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel
+from open_recall.utils.schemas import TagCreate, TagResponse, ScreenshotResponse, Page, BaseModel, EventType
 from open_recall.utils.settings import BASE_DIR, settings_manager
 from open_recall.utils.summarization import generate_summary, generate_search_results_summary, get_available_models, download_model, is_model_downloaded
 from contextlib import asynccontextmanager
@@ -170,9 +170,9 @@ async def delete_tag(tag_id: int, db = Depends(get_db)):
     db.delete(tag)
     db.commit()
     
-    # Broadcast update
+    # Broadcast the tag deletion
     await manager.broadcast({
-        "type": "tag_deleted",
+        "type": EventType.TAG_DELETED,
         "tag_id": tag_id
     })
     
@@ -188,9 +188,9 @@ async def toggle_favorite(screenshot_id: int, db = Depends(get_db)):
     screenshot.is_favorite = not screenshot.is_favorite
     db.commit()
     
-    # Broadcast update
+    # Broadcast the update
     await manager.broadcast({
-        "type": "favorite_updated",
+        "type": EventType.FAVORITE_UPDATED,
         "screenshot_id": screenshot_id,
         "is_favorite": screenshot.is_favorite
     })
@@ -210,9 +210,9 @@ async def update_notes(screenshot_id: int, notes_data: NotesUpdate, db = Depends
     screenshot.notes = notes_data.notes
     db.commit()
     
-    # Broadcast update
+    # Broadcast the update
     await manager.broadcast({
-        "type": "notes_updated",
+        "type": EventType.NOTES_UPDATED,
         "screenshot_id": screenshot_id,
         "notes": screenshot.notes
     })
@@ -298,9 +298,9 @@ async def toggle_favorite(screenshot_id: int, db = Depends(get_db)):
     screenshot.is_favorite = not screenshot.is_favorite
     db.commit()
     
-    # Broadcast update
+    # Broadcast the update
     await manager.broadcast({
-        "type": "favorite_updated",
+        "type": EventType.FAVORITE_UPDATED,
         "screenshot_id": screenshot_id,
         "is_favorite": screenshot.is_favorite
     })
@@ -319,11 +319,15 @@ async def add_tag_to_screenshot(screenshot_id: int, tag_id: int, db = Depends(ge
         screenshot.tags.append(tag)
         db.commit()
         
-        # Broadcast update
+        # Broadcast the update
+        tag_response = {
+            "id": tag.id,
+            "name": tag.name
+        }
         await manager.broadcast({
-            "type": "tag_added",
+            "type": EventType.TAG_ADDED,
             "screenshot_id": screenshot_id,
-            "tag": {"id": tag.id, "name": tag.name}
+            "tag": tag_response
         })
     
     return {"success": True}
@@ -340,9 +344,9 @@ async def remove_tag_from_screenshot(screenshot_id: int, tag_id: int, db = Depen
         screenshot.tags.remove(tag)
         db.commit()
         
-        # Broadcast update
+        # Broadcast the update
         await manager.broadcast({
-            "type": "tag_removed",
+            "type": EventType.TAG_REMOVED,
             "screenshot_id": screenshot_id,
             "tag_id": tag_id
         })
@@ -400,6 +404,7 @@ async def delete_screenshots_before_date(
         file_paths = [os.path.join(screenshot_manager.storage_path, screenshot.file_path) for screenshot in screenshots if screenshot.file_path]
         
         # Delete screenshots from database
+        deleted_ids = [screenshot.id for screenshot in screenshots]
         for screenshot in screenshots:
             db.delete(screenshot)
         db.commit()
@@ -427,10 +432,11 @@ async def delete_screenshots_before_date(
         
         message = " ".join(message_parts)
         
-        # Broadcast update
+        # Broadcast the deletion
         await manager.broadcast({
-            "type": "screenshots_deleted",
-            "count": count
+            "type": EventType.SCREENSHOTS_DELETED,
+            "count": count,
+            "ids": deleted_ids
         })
         
         return {
@@ -563,12 +569,13 @@ async def update_settings(settings: SettingsUpdate):
         screenshot_manager.start()
     
     # Broadcast settings update
+    updated_settings = settings_manager.get_all_settings()
     await manager.broadcast({
-        "type": "settings_updated",
-        "settings": settings_manager.get_all_settings()
+        "type": EventType.SETTINGS_UPDATED,
+        "settings": updated_settings
     })
     
-    return settings_manager.get_all_settings()
+    return updated_settings
 
 @app.get("/api/summarization/models")
 async def get_summarization_models():

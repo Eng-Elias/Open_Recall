@@ -1,3 +1,4 @@
+import asyncio
 import os
 import time
 import threading
@@ -12,6 +13,7 @@ from .db_utils import get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
 from .summarization import generate_summary
 from .settings import BASE_DIR, settings_manager
+from .schemas import EventType
 
 class ScreenshotManager:
     _instance = None
@@ -181,7 +183,39 @@ class ScreenshotManager:
                 "confidence_score": float(confidence),
                 "summary": summary
             }
-            screenshot_crud.create(db, data=screenshot_data)
+            screenshot = screenshot_crud.create(db, data=screenshot_data)
+            
+            # Try to broadcast the new screenshot via WebSocket if available
+            try:
+                # Import here to avoid circular imports
+                from open_recall.main import manager
+                
+                # Convert SQLAlchemy model to dict for JSON serialization
+                screenshot_dict = {
+                    "id": screenshot.id,
+                    "file_path": screenshot.file_path,
+                    "timestamp": screenshot.timestamp.isoformat(),
+                    "app_name": screenshot.app_name,
+                    "window_title": screenshot.window_title,
+                    "extracted_text": screenshot.extracted_text,
+                    "confidence_score": screenshot.confidence_score,
+                    "summary": screenshot.summary,
+                    "is_favorite": screenshot.is_favorite,
+                    "notes": screenshot.notes,
+                    "tags": [{"id": tag.id, "name": tag.name, "color": tag.color} for tag in screenshot.tags]
+                }
+
+                async def broadcast():
+                    asyncio.create_task(
+                        manager.broadcast({
+                            "type": EventType.NEW_SCREENSHOT,
+                            "screenshot": screenshot_dict
+                        })
+                    )
+
+                asyncio.run(broadcast())
+            except Exception as e:
+                print(f"Failed to broadcast new screenshot: {e}")
 
         self.last_screenshot = screenshot_array
 
