@@ -8,6 +8,7 @@ import mss
 import numpy as np
 from PIL import Image
 import psutil
+import platform
 
 from .db_utils import get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
@@ -46,40 +47,293 @@ class ScreenshotManager:
             os.makedirs(self.storage_path, exist_ok=True)
 
     def _get_active_window_info(self) -> tuple:
-        """Get active window information using platform-agnostic methods"""
+        """Get active window information using platform-specific methods"""
         try:
-            # Get the current process
-            current_pid = os.getpid()
+            # Determine the platform
+            system = platform.system()
             
-            # Get information about the current process
-            process = psutil.Process(current_pid)
-            app_name = process.name()
+            if system == "Windows":
+                return self._get_active_window_info_windows()
+            elif system == "Darwin":  # macOS
+                return self._get_active_window_info_macos()
+            elif system == "Linux":
+                return self._get_active_window_info_linux()
+            else:
+                # Fallback for unknown platforms
+                return "Unknown", "Unknown"
+        except Exception as e:
+            print(f"Error getting window info: {e}")
+            return "Unknown", "Unknown"
             
-            # Try to get parent process information for better context
-            try:
-                parent = process.parent()
-                if parent:
-                    parent_name = parent.name()
-                    app_name = f"{parent_name} > {app_name}"
-            except (psutil.NoSuchProcess, psutil.AccessDenied):
-                pass
+    def _get_active_window_info_windows(self) -> tuple:
+        """Get active window information for Windows"""
+        try:
+            # Dynamically import Windows-specific libraries
+            import ctypes
+            from ctypes import wintypes
+            
+            # Get the foreground window handle
+            hwnd = ctypes.windll.user32.GetForegroundWindow()
+            if not hwnd:
+                return "Unknown", "Unknown"
                 
-            # For window title, we'll use a generic approach
-            # Since we can't reliably get the window title cross-platform without
-            # platform-specific libraries, we'll use the process command line
+            # Get the process ID of the foreground window
+            pid = wintypes.DWORD()
+            ctypes.windll.user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+            
+            # Get process information
             try:
-                cmdline = process.cmdline()
-                window_title = " ".join(cmdline) if cmdline else "Open_Recall"
+                process = psutil.Process(pid.value)
+                app_name = process.name()
+                
+                # Try to get a better name from the executable path
+                try:
+                    exe = process.exe()
+                    if exe:
+                        better_name = os.path.basename(exe)
+                        # Remove extension if present
+                        better_name = os.path.splitext(better_name)[0]
+                        if better_name and better_name != app_name:
+                            app_name = better_name
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+                
+                # Get window title
+                length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
+                buff = ctypes.create_unicode_buffer(length + 1)
+                ctypes.windll.user32.GetWindowTextW(hwnd, buff, length + 1)
+                window_title = buff.value
+                
+                # If window title is empty, try to use the process name or command line
+                if not window_title:
+                    try:
+                        cmdline = process.cmdline()
+                        window_title = " ".join(cmdline) if cmdline else app_name
+                    except (psutil.NoSuchProcess, psutil.AccessDenied):
+                        window_title = app_name
+                
                 # Truncate if too long
                 if len(window_title) > 100:
                     window_title = window_title[:97] + "..."
-            except (psutil.NoSuchProcess, psutil.AccessDenied):
-                window_title = "Open_Recall"
+                    
+                return app_name, window_title
                 
-            return app_name, window_title
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                return "Unknown", "Unknown"
+                
         except Exception as e:
-            print(f"Error getting window info: {e}")
-            return "Open_Recall", "Open_Recall"
+            print(f"Error getting Windows window info: {e}")
+            return "Unknown", "Unknown"
+            
+    def _get_active_window_info_macos(self) -> tuple:
+        """Get active window information for macOS"""
+        try:
+            # Try to use the AppKit approach first
+            try:
+                # Dynamically import macOS-specific libraries
+                from AppKit import NSWorkspace
+                
+                # Get the active application
+                active_app = NSWorkspace.sharedWorkspace().activeApplication()
+                if active_app:
+                    app_name = active_app['NSApplicationName']
+                    window_title = app_name  # macOS doesn't easily expose window titles
+                    return app_name, window_title
+            except (ImportError, Exception) as e:
+                print(f"AppKit approach failed: {e}")
+                pass
+                
+            # Fallback to using the 'osascript' command
+            try:
+                import subprocess
+                
+                # AppleScript to get the frontmost application name
+                script = 'tell application "System Events" to get name of first application process whose frontmost is true'
+                result = subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
+                
+                if result.returncode == 0 and result.stdout.strip():
+                    app_name = result.stdout.strip()
+                    
+                    # Try to get window title (might not work for all applications)
+                    title_script = '''
+                    tell application "System Events"
+                        set frontApp to first application process whose frontmost is true
+                        set frontAppName to name of frontApp
+                        tell process frontAppName
+                            try
+                                set winTitle to name of first window
+                            on error
+                                set winTitle to frontAppName
+                            end try
+                        end tell
+                    end tell
+                    '''
+                    
+                    title_result = subprocess.run(['osascript', '-e', title_script], capture_output=True, text=True)
+                    if title_result.returncode == 0 and title_result.stdout.strip():
+                        window_title = title_result.stdout.strip()
+                    else:
+                        window_title = app_name
+                        
+                    return app_name, window_title
+            except Exception as e:
+                print(f"osascript approach failed: {e}")
+                pass
+                
+            # If all else fails, use the psutil approach as a last resort
+            processes = []
+            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
+                try:
+                    proc_info = proc.as_dict(attrs=['pid', 'name', 'cpu_percent'])
+                    processes.append(proc_info)
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+                    
+            if processes:
+                # Sort by CPU usage (descending)
+                processes.sort(key=lambda x: x.get('cpu_percent', 0), reverse=True)
+                top_process = processes[0]
+                return top_process['name'], top_process['name']
+                
+            return "Unknown", "Unknown"
+            
+        except Exception as e:
+            print(f"Error getting macOS window info: {e}")
+            return "Unknown", "Unknown"
+            
+    def _get_active_window_info_linux(self) -> tuple:
+        """Get active window information for Linux"""
+        try:
+            # Try using xdotool if available
+            try:
+                import subprocess
+                
+                # Get window ID of active window
+                window_id = subprocess.run(['xdotool', 'getactivewindow'], capture_output=True, text=True)
+                if window_id.returncode == 0 and window_id.stdout.strip():
+                    # Get window name/title
+                    window_name = subprocess.run(['xdotool', 'getwindowname', window_id.stdout.strip()], 
+                                               capture_output=True, text=True)
+                    
+                    # Get window PID
+                    window_pid = subprocess.run(['xdotool', 'getwindowpid', window_id.stdout.strip()], 
+                                              capture_output=True, text=True)
+                    
+                    if window_pid.returncode == 0 and window_pid.stdout.strip():
+                        try:
+                            pid = int(window_pid.stdout.strip())
+                            process = psutil.Process(pid)
+                            app_name = process.name()
+                            
+                            # Try to get a better name from the executable path
+                            try:
+                                exe = process.exe()
+                                if exe:
+                                    better_name = os.path.basename(exe)
+                                    # Remove extension if present
+                                    better_name = os.path.splitext(better_name)[0]
+                                    if better_name and better_name != app_name:
+                                        app_name = better_name
+                            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                                pass
+                                
+                            window_title = window_name.stdout.strip() if window_name.returncode == 0 else app_name
+                            
+                            # Truncate if too long
+                            if len(window_title) > 100:
+                                window_title = window_title[:97] + "..."
+                                
+                            return app_name, window_title
+                        except (ValueError, psutil.NoSuchProcess, psutil.AccessDenied):
+                            pass
+            except (ImportError, FileNotFoundError) as e:
+                print(f"xdotool approach failed: {e}")
+                pass
+                
+            # Try using wmctrl if available
+            try:
+                import subprocess
+                
+                # Get active window info
+                result = subprocess.run(['wmctrl', '-l', '-p'], capture_output=True, text=True)
+                if result.returncode == 0 and result.stdout.strip():
+                    # Parse wmctrl output to find the active window
+                    import re
+                    
+                    # Get the active window ID using xprop
+                    active_id = subprocess.run(['xprop', '-root', '_NET_ACTIVE_WINDOW'], 
+                                             capture_output=True, text=True)
+                    
+                    if active_id.returncode == 0 and active_id.stdout.strip():
+                        # Extract the window ID
+                        match = re.search(r'window id # (0x[0-9a-f]+)', active_id.stdout.strip())
+                        if match:
+                            window_id = match.group(1)
+                            
+                            # Find this window in wmctrl output
+                            for line in result.stdout.strip().split('\n'):
+                                if window_id.lower() in line.lower():
+                                    parts = line.split()
+                                    if len(parts) >= 3:
+                                        try:
+                                            pid = int(parts[2])
+                                            process = psutil.Process(pid)
+                                            app_name = process.name()
+                                            
+                                            # Try to get a better name from the executable path
+                                            try:
+                                                exe = process.exe()
+                                                if exe:
+                                                    better_name = os.path.basename(exe)
+                                                    # Remove extension if present
+                                                    better_name = os.path.splitext(better_name)[0]
+                                                    if better_name and better_name != app_name:
+                                                        app_name = better_name
+                                            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                                                pass
+                                                
+                                            # Window title is the rest of the line after the desktop number
+                                            window_title = ' '.join(parts[4:])
+                                            
+                                            # Truncate if too long
+                                            if len(window_title) > 100:
+                                                window_title = window_title[:97] + "..."
+                                                
+                                            return app_name, window_title
+                                        except (ValueError, psutil.NoSuchProcess, psutil.AccessDenied):
+                                            pass
+            except (ImportError, FileNotFoundError) as e:
+                print(f"wmctrl approach failed: {e}")
+                pass
+                
+            # If all else fails, use the psutil approach as a last resort
+            processes = []
+            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
+                try:
+                    proc_info = proc.as_dict(attrs=['pid', 'name', 'cpu_percent'])
+                    processes.append(proc_info)
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+                    
+            if processes:
+                # Sort by CPU usage (descending)
+                processes.sort(key=lambda x: x.get('cpu_percent', 0), reverse=True)
+                
+                # Filter out system processes
+                system_processes = ['Xorg', 'xorg', 'X', 'systemd', 'kwin', 'gnome-shell', 'plasmashell', 'xfwm4']
+                
+                for proc in processes:
+                    if proc['name'] not in system_processes and proc.get('cpu_percent', 0) > 0.5:
+                        return proc['name'], proc['name']
+                        
+                # If no suitable process found, return the top one
+                return processes[0]['name'], processes[0]['name']
+                
+            return "Unknown", "Unknown"
+            
+        except Exception as e:
+            print(f"Error getting Linux window info: {e}")
+            return "Unknown", "Unknown"
 
     def _calculate_image_similarity(self, img1: np.ndarray, img2: np.ndarray) -> float:
         """Calculate structural similarity between two images"""
