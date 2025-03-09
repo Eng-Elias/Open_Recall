@@ -18,6 +18,7 @@ import os
 import json
 from fastapi import HTTPException
 import uvicorn
+from datetime import time
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -374,8 +375,11 @@ async def delete_screenshots_before_date(
         # Convert string date to datetime
         target_date = datetime.fromisoformat(date)
         
-        # Start with base query for screenshots before the target date
-        query = db.query(Screenshot).filter(Screenshot.timestamp < target_date)
+        # Set the time to the end of the day (23:59:59.999999)
+        target_date = datetime.combine(target_date.date(), time(23, 59, 59, 999999))
+        
+        # Start with base query for screenshots before or equal to the target date (end of day)
+        query = db.query(Screenshot).filter(Screenshot.timestamp <= target_date)
         
         # Apply additional filters
         if exclude_favorites:
