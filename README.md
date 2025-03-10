@@ -161,13 +161,13 @@ make build_desktop
 make package_desktop
 
 # Install the package in development mode
-make install-dev
+make install_dev
 
 # Build the Python package for PyPI
-make pypi-build
+make pypi_build
 
 # Upload the package to PyPI
-make pypi-upload
+make pypi_upload
 
 # Clean build artifacts
 make clean
