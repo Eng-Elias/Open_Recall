@@ -17,6 +17,12 @@ Open_Recall is a powerful desktop application that helps you search, find and an
   <a href="https://youtu.be/mqYihFedxmY">Watch the Open_Recall Demo on YouTube</a>
 </p>
 
+<p align="center">
+  <a href="https://medium.com/@eng_elias/open-recall-my-open-source-solution-for-remembering-everything-youve-seen-on-the-pc-ab3976add3d0">
+    <img src="https://img.shields.io/badge/Medium-Read%20the%20Article-black?style=for-the-badge&logo=medium" alt="Medium Article">
+  </a>
+</p>
+
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/Eng-Elias/Open_Recall)
 
 ## Project Structure
