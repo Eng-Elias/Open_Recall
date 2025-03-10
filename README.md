@@ -187,6 +187,14 @@ To build and publish the Python package to PyPI:
 make pypi-upload
 ```
 
+## Support
+
+If you find Open_Recall helpful and would like to support its development, consider buying me a book! Your support will allow me to dedicate more time to enhancing and adding new features to Open_Recall.
+
+[https://www.buymeacoffee.com/eng_elias](https://www.buymeacoffee.com/eng_elias)
+
+[![Buy Me a Coffee](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeW41NXV3ZXYxY2pvOG5lcjJueDF3NDFlcWNneDJ4MW9kY25jbWhzeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/7kZE0z52Sd9zSESzDA/giphy.gif)](https://www.buymeacoffee.com/eng_elias)
+
 ## License
 
 This application is open-source and is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. See the [LICENSE](LICENSE) file for details.
