@@ -61,7 +61,7 @@ export default [
       "no-trailing-spaces": "warn",
       semi: ["error", "always"],
       quotes: ["error", "double", { avoidEscape: true }],
-      indent: ["error", 2],
+      // indent: ["error", 2],
 
       // Modern JavaScript
       "arrow-body-style": ["error", "as-needed"],
