@@ -1,12 +1,16 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import or_
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy import or_
+from sqlalchemy.orm import Session
+
 from . import models
+
 
 class CRUDBase:
     def __init__(self, model):
         self.model = model
+
 
 class ScreenshotCRUD(CRUDBase):
     def __init__(self):
@@ -26,18 +30,9 @@ class ScreenshotCRUD(CRUDBase):
         return db.query(self.model).filter(self.model.file_path == file_path).first()
 
     def get_multi(
-        self,
-        db: Session,
-        *,
-        skip: int = 0,
-        limit: int = 100,
-        order_by: str = "timestamp"
+        self, db: Session, *, skip: int = 0, limit: int = 100, order_by: str = "timestamp"
     ) -> List[models.Screenshot]:
-        return db.query(self.model)\
-            .order_by(getattr(self.model, order_by).desc())\
-            .offset(skip)\
-            .limit(limit)\
-            .all()
+        return db.query(self.model).order_by(getattr(self.model, order_by).desc()).offset(skip).limit(limit).all()
 
     def search(
         self,
@@ -50,7 +45,7 @@ class ScreenshotCRUD(CRUDBase):
         tags: Optional[List[str]] = None,
         is_favorite: Optional[bool] = None,
         skip: int = 0,
-        limit: int = 100
+        limit: int = 100,
     ) -> List[models.Screenshot]:
         search_query = db.query(self.model)
 
@@ -59,7 +54,7 @@ class ScreenshotCRUD(CRUDBase):
                 or_(
                     self.model.extracted_text.ilike(f"%{query}%"),
                     self.model.window_title.ilike(f"%{query}%"),
-                    self.model.notes.ilike(f"%{query}%")
+                    self.model.notes.ilike(f"%{query}%"),
                 )
             )
 
@@ -73,25 +68,14 @@ class ScreenshotCRUD(CRUDBase):
             search_query = search_query.filter(self.model.timestamp <= end_date)
 
         if tags:
-            search_query = search_query.filter(
-                self.model.tags.any(models.Tag.name.in_(tags))
-            )
+            search_query = search_query.filter(self.model.tags.any(models.Tag.name.in_(tags)))
 
         if is_favorite is not None:
             search_query = search_query.filter(self.model.is_favorite == is_favorite)
 
-        return search_query.order_by(self.model.timestamp.desc())\
-            .offset(skip)\
-            .limit(limit)\
-            .all()
+        return search_query.order_by(self.model.timestamp.desc()).offset(skip).limit(limit).all()
 
-    def update(
-        self,
-        db: Session,
-        *,
-        db_obj: models.Screenshot,
-        obj_in: Dict[str, Any]
-    ) -> models.Screenshot:
+    def update(self, db: Session, *, db_obj: models.Screenshot, obj_in: Dict[str, Any]) -> models.Screenshot:
         for field, value in obj_in.items():
             setattr(db_obj, field, value)
         db.commit()
@@ -105,6 +89,7 @@ class ScreenshotCRUD(CRUDBase):
             db.commit()
             return True
         return False
+
 
 class TagCRUD(CRUDBase):
     def __init__(self):
@@ -123,18 +108,8 @@ class TagCRUD(CRUDBase):
     def get_by_name(self, db: Session, name: str) -> Optional[models.Tag]:
         return db.query(self.model).filter(self.model.name == name).first()
 
-    def get_multi(
-        self,
-        db: Session,
-        *,
-        skip: int = 0,
-        limit: int = 100
-    ) -> List[models.Tag]:
-        return db.query(self.model)\
-            .order_by(self.model.name)\
-            .offset(skip)\
-            .limit(limit)\
-            .all()
+    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[models.Tag]:
+        return db.query(self.model).order_by(self.model.name).offset(skip).limit(limit).all()
 
     def get_or_create(self, db: Session, *, name: str, is_auto_generated: bool = False) -> models.Tag:
         tag = self.get_by_name(db, name=name)
@@ -143,12 +118,7 @@ class TagCRUD(CRUDBase):
         return tag
 
     def add_tag_to_screenshot(
-        self,
-        db: Session,
-        *,
-        screenshot_id: int,
-        tag_name: str,
-        is_auto_generated: bool = False
+        self, db: Session, *, screenshot_id: int, tag_name: str, is_auto_generated: bool = False
     ) -> Optional[models.Screenshot]:
         screenshot = db.query(models.Screenshot).get(screenshot_id)
         if not screenshot:
@@ -163,11 +133,7 @@ class TagCRUD(CRUDBase):
         return screenshot
 
     def remove_tag_from_screenshot(
-        self,
-        db: Session,
-        *,
-        screenshot_id: int,
-        tag_name: str
+        self, db: Session, *, screenshot_id: int, tag_name: str
     ) -> Optional[models.Screenshot]:
         screenshot = db.query(models.Screenshot).get(screenshot_id)
         if not screenshot:
@@ -188,6 +154,7 @@ class TagCRUD(CRUDBase):
             db.commit()
             return True
         return False
+
 
 # Create CRUD instances
 screenshot_crud = ScreenshotCRUD()

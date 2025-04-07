@@ -1,12 +1,15 @@
 from datetime import datetime
-from typing import List, Generic, TypeVar
-from pydantic import BaseModel, ConfigDict
 from enum import Enum
+from typing import Generic, List, TypeVar
 
-T = TypeVar('T')
+from pydantic import BaseModel, ConfigDict
+
+T = TypeVar("T")
+
 
 class EventType(str, Enum):
     """WebSocket event types for real-time updates"""
+
     TAG_DELETED = "tag_deleted"
     FAVORITE_UPDATED = "favorite_updated"
     NOTES_UPDATED = "notes_updated"
@@ -16,16 +19,20 @@ class EventType(str, Enum):
     SETTINGS_UPDATED = "settings_updated"
     NEW_SCREENSHOT = "new_screenshot"
 
+
 class TagBase(BaseModel):
     name: str
+
 
 class TagCreate(TagBase):
     pass
 
+
 class TagResponse(TagBase):
     id: int
-    
+
     model_config = ConfigDict(from_attributes=True)
+
 
 class ScreenshotResponse(BaseModel):
     id: int
@@ -39,8 +46,9 @@ class ScreenshotResponse(BaseModel):
     notes: str | None = None
     summary: str | None = None
     tags: List[TagResponse]
-    
+
     model_config = ConfigDict(from_attributes=True)
+
 
 class Page(BaseModel, Generic[T]):
     items: List[T]

@@ -21,9 +21,7 @@ const ScreenshotModal = ({
     setNotes(initialScreenshot?.notes || "");
   }, [initialScreenshot]);
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
-  };
+  const formatDate = (dateString) => new Date(dateString).toLocaleString();
 
   const handleKeyPress = (e) => {
     if (e.key === "ArrowLeft") {
@@ -37,36 +35,33 @@ const ScreenshotModal = ({
 
   const handleToggleFavorite = async () => {
     await onToggleFavorite(screenshot.id);
-    setScreenshot((prev) => {
-      return { ...prev, is_favorite: !prev.is_favorite };
-    });
+    setScreenshot((prev) => ({ ...prev, is_favorite: !prev.is_favorite }));
     refetch();
   };
 
   const handleAddTag = async (tagId) => {
     await onAddTag(screenshot.id, tagId);
-    setScreenshot((prev) => {
-      return { ...prev, tags: [...prev.tags, tagId] };
-    });
+    setScreenshot((prev) => ({ ...prev, tags: [...prev.tags, tagId] }));
     refetch();
   };
 
   const handleRemoveTag = async (tagId) => {
     await onRemoveTag(screenshot.id, tagId);
-    setScreenshot((prev) => {
-      return { ...prev, tags: prev.tags.filter((t) => t.id !== tagId) };
-    });
+    setScreenshot((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t.id !== tagId),
+    }));
     refetch();
   };
-  
+
   const handleOpenNotesEditor = () => {
     setShowNotesEditor(true);
   };
-  
+
   const handleCloseNotesEditor = () => {
     setShowNotesEditor(false);
   };
-  
+
   const handleSaveNotes = async () => {
     setIsSavingNotes(true);
     try {
@@ -77,7 +72,7 @@ const ScreenshotModal = ({
         },
         body: JSON.stringify({ notes }),
       });
-      
+
       if (response.ok) {
         setScreenshot((prev) => ({ ...prev, notes }));
         setShowNotesEditor(false);
@@ -111,9 +106,9 @@ const ScreenshotModal = ({
                   {formatDate(screenshot.timestamp)}
                 </span>
                 {screenshot.summary && (
-                  <span 
-                    className="badge bg-info text-white" 
-                    data-bs-toggle="tooltip" 
+                  <span
+                    className="badge bg-info text-white"
+                    data-bs-toggle="tooltip"
                     title={screenshot.summary}
                   >
                     Summary
@@ -143,7 +138,8 @@ const ScreenshotModal = ({
                     <ul className="dropdown-menu">
                       {allTags
                         .filter(
-                          (tag) => !screenshot.tags.some((t) => t.id === tag.id)
+                          (tag) =>
+                            !screenshot.tags.some((t) => t.id === tag.id),
                         )
                         .map((tag) => (
                           <li key={tag.id}>
@@ -158,7 +154,7 @@ const ScreenshotModal = ({
                     </ul>
                   </div>
                 </div>
-                <button 
+                <button
                   className="btn btn-sm btn-outline-primary"
                   onClick={handleOpenNotesEditor}
                   data-bs-toggle="tooltip"
@@ -206,15 +202,22 @@ const ScreenshotModal = ({
           </div>
         </div>
       </div>
-      
+
       {/* Notes Editor Modal */}
       {showNotesEditor && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Screenshot Notes</h5>
-                <button type="button" className="btn-close" onClick={handleCloseNotesEditor}></button>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleCloseNotesEditor}
+                ></button>
               </div>
               <div className="modal-body">
                 <textarea
@@ -226,25 +229,31 @@ const ScreenshotModal = ({
                 ></textarea>
               </div>
               <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
+                <button
+                  type="button"
+                  className="btn btn-secondary"
                   onClick={handleCloseNotesEditor}
                 >
                   Cancel
                 </button>
-                <button 
-                  type="button" 
-                  className="btn btn-primary" 
+                <button
+                  type="button"
+                  className="btn btn-primary"
                   onClick={handleSaveNotes}
                   disabled={isSavingNotes}
                 >
                   {isSavingNotes ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Saving...
                     </>
-                  ) : "Save Notes"}
+                  ) : (
+                    "Save Notes"
+                  )}
                 </button>
               </div>
             </div>

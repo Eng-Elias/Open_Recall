@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import io
 import re
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 # This setup.py file is maintained for backward compatibility
 # Most configuration is now in pyproject.toml

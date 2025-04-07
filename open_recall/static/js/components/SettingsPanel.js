@@ -76,7 +76,7 @@ const SettingsPanel = () => {
         // Show a confirmation dialog
         if (
           window.confirm(
-            `The model "${selectedModel.name}" is not downloaded yet. Do you want to download it now?`
+            `The model "${selectedModel.name}" is not downloaded yet. Do you want to download it now?`,
           )
         ) {
           handleDownloadModel(value);
@@ -126,7 +126,7 @@ const SettingsPanel = () => {
         `/api/summarization/models/${encodeURIComponent(modelId)}/download`,
         {
           method: "POST",
-        }
+        },
       );
 
       if (response.ok) {
@@ -181,7 +181,7 @@ const SettingsPanel = () => {
                   onChange={(e) =>
                     handleSettingChange(
                       "enable_summarization",
-                      e.target.checked
+                      e.target.checked,
                     )
                   }
                 />
@@ -212,7 +212,7 @@ const SettingsPanel = () => {
                       onChange={(e) =>
                         handleSettingChange(
                           "summarization_model",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     >
@@ -304,7 +304,7 @@ const SettingsPanel = () => {
                 onChange={(e) =>
                   handleSettingChange(
                     "capture_interval",
-                    parseInt(e.target.value)
+                    parseInt(e.target.value),
                   )
                 }
               />

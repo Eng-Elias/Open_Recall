@@ -1,20 +1,22 @@
 import asyncio
 import os
-import time
+import platform
 import threading
+import time
 from datetime import datetime, timezone
 from typing import Optional
+
 import mss
 import numpy as np
-from PIL import Image
 import psutil
-import platform
+from PIL import Image
 
 from .db_utils import get_db, screenshot_crud
 from .ocr_utils import process_image_ocr
-from .summarization import generate_summary
-from .settings import BASE_DIR, settings_manager
 from .schemas import EventType
+from .settings import BASE_DIR, settings_manager
+from .summarization import generate_summary
+
 
 class ScreenshotManager:
     _instance = None
@@ -27,7 +29,7 @@ class ScreenshotManager:
             return cls._instance
 
     def __init__(self, storage_path: str = None, capture_interval: int = None):
-        if not hasattr(self, 'initialized'):
+        if not hasattr(self, "initialized"):
             self.storage_path = storage_path or self._get_default_storage_path()
             # Get capture interval from settings or use default
             self.capture_interval = capture_interval or settings_manager.get_setting("capture_interval", 300)
@@ -51,7 +53,7 @@ class ScreenshotManager:
         try:
             # Determine the platform
             system = platform.system()
-            
+
             if system == "Windows":
                 return self._get_active_window_info_windows()
             elif system == "Darwin":  # macOS
@@ -64,28 +66,28 @@ class ScreenshotManager:
         except Exception as e:
             print(f"Error getting window info: {e}")
             return "Unknown", "Unknown"
-            
+
     def _get_active_window_info_windows(self) -> tuple:
         """Get active window information for Windows"""
         try:
             # Dynamically import Windows-specific libraries
             import ctypes
             from ctypes import wintypes
-            
+
             # Get the foreground window handle
             hwnd = ctypes.windll.user32.GetForegroundWindow()
             if not hwnd:
                 return "Unknown", "Unknown"
-                
+
             # Get the process ID of the foreground window
             pid = wintypes.DWORD()
             ctypes.windll.user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
-            
+
             # Get process information
             try:
                 process = psutil.Process(pid.value)
                 app_name = process.name()
-                
+
                 # Try to get a better name from the executable path
                 try:
                     exe = process.exe()
@@ -97,13 +99,13 @@ class ScreenshotManager:
                             app_name = better_name
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
-                
+
                 # Get window title
                 length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
                 buff = ctypes.create_unicode_buffer(length + 1)
                 ctypes.windll.user32.GetWindowTextW(hwnd, buff, length + 1)
                 window_title = buff.value
-                
+
                 # If window title is empty, try to use the process name or command line
                 if not window_title:
                     try:
@@ -111,20 +113,20 @@ class ScreenshotManager:
                         window_title = " ".join(cmdline) if cmdline else app_name
                     except (psutil.NoSuchProcess, psutil.AccessDenied):
                         window_title = app_name
-                
+
                 # Truncate if too long
                 if len(window_title) > 100:
                     window_title = window_title[:97] + "..."
-                    
+
                 return app_name, window_title
-                
+
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 return "Unknown", "Unknown"
-                
+
         except Exception as e:
             print(f"Error getting Windows window info: {e}")
             return "Unknown", "Unknown"
-            
+
     def _get_active_window_info_macos(self) -> tuple:
         """Get active window information for macOS"""
         try:
@@ -132,30 +134,32 @@ class ScreenshotManager:
             try:
                 # Dynamically import macOS-specific libraries
                 from AppKit import NSWorkspace
-                
+
                 # Get the active application
                 active_app = NSWorkspace.sharedWorkspace().activeApplication()
                 if active_app:
-                    app_name = active_app['NSApplicationName']
+                    app_name = active_app["NSApplicationName"]
                     window_title = app_name  # macOS doesn't easily expose window titles
                     return app_name, window_title
             except (ImportError, Exception) as e:
                 print(f"AppKit approach failed: {e}")
                 pass
-                
+
             # Fallback to using the 'osascript' command
             try:
                 import subprocess
-                
+
                 # AppleScript to get the frontmost application name
-                script = 'tell application "System Events" to get name of first application process whose frontmost is true'
-                result = subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
-                
+                script = (
+                    'tell application "System Events" to get name of first application process whose frontmost is true'
+                )
+                result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
+
                 if result.returncode == 0 and result.stdout.strip():
                     app_name = result.stdout.strip()
-                    
+
                     # Try to get window title (might not work for all applications)
-                    title_script = '''
+                    title_script = """
                     tell application "System Events"
                         set frontApp to first application process whose frontmost is true
                         set frontAppName to name of frontApp
@@ -167,64 +171,66 @@ class ScreenshotManager:
                             end try
                         end tell
                     end tell
-                    '''
-                    
-                    title_result = subprocess.run(['osascript', '-e', title_script], capture_output=True, text=True)
+                    """
+
+                    title_result = subprocess.run(["osascript", "-e", title_script], capture_output=True, text=True)
                     if title_result.returncode == 0 and title_result.stdout.strip():
                         window_title = title_result.stdout.strip()
                     else:
                         window_title = app_name
-                        
+
                     return app_name, window_title
             except Exception as e:
                 print(f"osascript approach failed: {e}")
                 pass
-                
+
             # If all else fails, use the psutil approach as a last resort
             processes = []
-            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
+            for proc in psutil.process_iter(["pid", "name", "cpu_percent"]):
                 try:
-                    proc_info = proc.as_dict(attrs=['pid', 'name', 'cpu_percent'])
+                    proc_info = proc.as_dict(attrs=["pid", "name", "cpu_percent"])
                     processes.append(proc_info)
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
-                    
+
             if processes:
                 # Sort by CPU usage (descending)
-                processes.sort(key=lambda x: x.get('cpu_percent', 0), reverse=True)
+                processes.sort(key=lambda x: x.get("cpu_percent", 0), reverse=True)
                 top_process = processes[0]
-                return top_process['name'], top_process['name']
-                
+                return top_process["name"], top_process["name"]
+
             return "Unknown", "Unknown"
-            
+
         except Exception as e:
             print(f"Error getting macOS window info: {e}")
             return "Unknown", "Unknown"
-            
+
     def _get_active_window_info_linux(self) -> tuple:
         """Get active window information for Linux"""
         try:
             # Try using xdotool if available
             try:
                 import subprocess
-                
+
                 # Get window ID of active window
-                window_id = subprocess.run(['xdotool', 'getactivewindow'], capture_output=True, text=True)
+                window_id = subprocess.run(["xdotool", "getactivewindow"], capture_output=True, text=True)
                 if window_id.returncode == 0 and window_id.stdout.strip():
                     # Get window name/title
-                    window_name = subprocess.run(['xdotool', 'getwindowname', window_id.stdout.strip()], 
-                                               capture_output=True, text=True)
-                    
+                    window_name = subprocess.run(
+                        ["xdotool", "getwindowname", window_id.stdout.strip()], capture_output=True, text=True
+                    )
+
                     # Get window PID
-                    window_pid = subprocess.run(['xdotool', 'getwindowpid', window_id.stdout.strip()], 
-                                              capture_output=True, text=True)
-                    
+                    window_pid = subprocess.run(
+                        ["xdotool", "getwindowpid", window_id.stdout.strip()], capture_output=True, text=True
+                    )
+
                     if window_pid.returncode == 0 and window_pid.stdout.strip():
                         try:
                             pid = int(window_pid.stdout.strip())
                             process = psutil.Process(pid)
                             app_name = process.name()
-                            
+
                             # Try to get a better name from the executable path
                             try:
                                 exe = process.exe()
@@ -236,42 +242,41 @@ class ScreenshotManager:
                                         app_name = better_name
                             except (psutil.NoSuchProcess, psutil.AccessDenied):
                                 pass
-                                
+
                             window_title = window_name.stdout.strip() if window_name.returncode == 0 else app_name
-                            
+
                             # Truncate if too long
                             if len(window_title) > 100:
                                 window_title = window_title[:97] + "..."
-                                
+
                             return app_name, window_title
                         except (ValueError, psutil.NoSuchProcess, psutil.AccessDenied):
                             pass
             except (ImportError, FileNotFoundError) as e:
                 print(f"xdotool approach failed: {e}")
                 pass
-                
+
             # Try using wmctrl if available
             try:
                 import subprocess
-                
+
                 # Get active window info
-                result = subprocess.run(['wmctrl', '-l', '-p'], capture_output=True, text=True)
+                result = subprocess.run(["wmctrl", "-l", "-p"], capture_output=True, text=True)
                 if result.returncode == 0 and result.stdout.strip():
                     # Parse wmctrl output to find the active window
                     import re
-                    
+
                     # Get the active window ID using xprop
-                    active_id = subprocess.run(['xprop', '-root', '_NET_ACTIVE_WINDOW'], 
-                                             capture_output=True, text=True)
-                    
+                    active_id = subprocess.run(["xprop", "-root", "_NET_ACTIVE_WINDOW"], capture_output=True, text=True)
+
                     if active_id.returncode == 0 and active_id.stdout.strip():
                         # Extract the window ID
-                        match = re.search(r'window id # (0x[0-9a-f]+)', active_id.stdout.strip())
+                        match = re.search(r"window id # (0x[0-9a-f]+)", active_id.stdout.strip())
                         if match:
                             window_id = match.group(1)
-                            
+
                             # Find this window in wmctrl output
-                            for line in result.stdout.strip().split('\n'):
+                            for line in result.stdout.strip().split("\n"):
                                 if window_id.lower() in line.lower():
                                     parts = line.split()
                                     if len(parts) >= 3:
@@ -279,7 +284,7 @@ class ScreenshotManager:
                                             pid = int(parts[2])
                                             process = psutil.Process(pid)
                                             app_name = process.name()
-                                            
+
                                             # Try to get a better name from the executable path
                                             try:
                                                 exe = process.exe()
@@ -291,46 +296,46 @@ class ScreenshotManager:
                                                         app_name = better_name
                                             except (psutil.NoSuchProcess, psutil.AccessDenied):
                                                 pass
-                                                
+
                                             # Window title is the rest of the line after the desktop number
-                                            window_title = ' '.join(parts[4:])
-                                            
+                                            window_title = " ".join(parts[4:])
+
                                             # Truncate if too long
                                             if len(window_title) > 100:
                                                 window_title = window_title[:97] + "..."
-                                                
+
                                             return app_name, window_title
                                         except (ValueError, psutil.NoSuchProcess, psutil.AccessDenied):
                                             pass
             except (ImportError, FileNotFoundError) as e:
                 print(f"wmctrl approach failed: {e}")
                 pass
-                
+
             # If all else fails, use the psutil approach as a last resort
             processes = []
-            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
+            for proc in psutil.process_iter(["pid", "name", "cpu_percent"]):
                 try:
-                    proc_info = proc.as_dict(attrs=['pid', 'name', 'cpu_percent'])
+                    proc_info = proc.as_dict(attrs=["pid", "name", "cpu_percent"])
                     processes.append(proc_info)
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
-                    
+
             if processes:
                 # Sort by CPU usage (descending)
-                processes.sort(key=lambda x: x.get('cpu_percent', 0), reverse=True)
-                
+                processes.sort(key=lambda x: x.get("cpu_percent", 0), reverse=True)
+
                 # Filter out system processes
-                system_processes = ['Xorg', 'xorg', 'X', 'systemd', 'kwin', 'gnome-shell', 'plasmashell', 'xfwm4']
-                
+                system_processes = ["Xorg", "xorg", "X", "systemd", "kwin", "gnome-shell", "plasmashell", "xfwm4"]
+
                 for proc in processes:
-                    if proc['name'] not in system_processes and proc.get('cpu_percent', 0) > 0.5:
-                        return proc['name'], proc['name']
-                        
+                    if proc["name"] not in system_processes and proc.get("cpu_percent", 0) > 0.5:
+                        return proc["name"], proc["name"]
+
                 # If no suitable process found, return the top one
-                return processes[0]['name'], processes[0]['name']
-                
+                return processes[0]["name"], processes[0]["name"]
+
             return "Unknown", "Unknown"
-            
+
         except Exception as e:
             print(f"Error getting Linux window info: {e}")
             return "Unknown", "Unknown"
@@ -351,7 +356,7 @@ class ScreenshotManager:
         mse = np.mean((img1_gray - img2_gray) ** 2)
         if mse == 0:
             return 1.0
-        
+
         # Convert MSE to similarity score (0-1)
         similarity = 1 / (1 + mse)
         return similarity
@@ -360,7 +365,7 @@ class ScreenshotManager:
         """Check if the current screenshot is significantly different from the last one"""
         if self.last_screenshot is None:
             return True
-        
+
         similarity = self._calculate_image_similarity(current, self.last_screenshot)
         return similarity < 0.95  # Threshold for significant change
 
@@ -386,7 +391,7 @@ class ScreenshotManager:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"screenshot_{timestamp}.webp"
             filepath = os.path.join(self.storage_path, filename)
-            
+
             image = Image.fromarray(image_array)
             image.save(filepath, format="webp", quality=90, method=6)
             # Return only filename, not full path
@@ -414,18 +419,20 @@ class ScreenshotManager:
             return
 
         app_name, window_title = self._get_active_window_info()
-        
+
         # Process OCR
         extracted_text, confidence = process_image_ocr(screenshot_array)
-        
+
         # Generate summary only if enabled in settings
         summary = ""
         if settings_manager.get_setting("enable_summarization", False):
-            summary = generate_summary(f"""
+            summary = generate_summary(
+                f"""
             Active App Name: {app_name}
             Screenshot Extracted Text: {extracted_text}
-            """)
-        
+            """
+            )
+
         # Save to database
         with next(get_db()) as db:
             screenshot_data = {
@@ -435,15 +442,15 @@ class ScreenshotManager:
                 "window_title": window_title,
                 "extracted_text": extracted_text,
                 "confidence_score": float(confidence),
-                "summary": summary
+                "summary": summary,
             }
             screenshot = screenshot_crud.create(db, data=screenshot_data)
-            
+
             # Try to broadcast the new screenshot via WebSocket if available
             try:
                 # Import here to avoid circular imports
                 from open_recall.main import manager
-                
+
                 # Convert SQLAlchemy model to dict for JSON serialization
                 screenshot_dict = {
                     "id": screenshot.id,
@@ -456,15 +463,12 @@ class ScreenshotManager:
                     "summary": screenshot.summary,
                     "is_favorite": screenshot.is_favorite,
                     "notes": screenshot.notes,
-                    "tags": [{"id": tag.id, "name": tag.name, "color": tag.color} for tag in screenshot.tags]
+                    "tags": [{"id": tag.id, "name": tag.name, "color": tag.color} for tag in screenshot.tags],
                 }
 
                 async def broadcast():
                     asyncio.create_task(
-                        manager.broadcast({
-                            "type": EventType.NEW_SCREENSHOT,
-                            "screenshot": screenshot_dict
-                        })
+                        manager.broadcast({"type": EventType.NEW_SCREENSHOT, "screenshot": screenshot_dict})
                     )
 
                 asyncio.run(broadcast())
@@ -480,10 +484,10 @@ class ScreenshotManager:
                 self._process_and_save()
             except Exception as e:
                 print(f"Error in screenshot loop: {e}")
-            
+
             if not self.is_running:
                 break
-            
+
             for _ in range(int(self.capture_interval)):
                 if not self.is_running:
                     break
@@ -493,7 +497,7 @@ class ScreenshotManager:
         """Start screenshot capture thread"""
         if self.is_running:
             return
-        
+
         print("Starting screenshot manager...")
         self.is_running = True
         self.thread = threading.Thread(target=self._screenshot_loop, daemon=True)
@@ -507,7 +511,7 @@ class ScreenshotManager:
 
         print("Stopping screenshot manager...")
         self.is_running = False
-        
+
         if self.thread and self.thread.is_alive():
             try:
                 self.thread.join(timeout=10)
@@ -515,13 +519,14 @@ class ScreenshotManager:
                     print("Warning: Screenshot thread did not stop gracefully")
             except Exception as e:
                 print(f"Error stopping screenshot thread: {e}")
-        
+
         self.thread = None
         print("Screenshot manager stopped")
 
     def __del__(self):
         """Ensure resources are cleaned up"""
         self.stop()
+
 
 # Global screenshot manager instance
 screenshot_manager = ScreenshotManager()

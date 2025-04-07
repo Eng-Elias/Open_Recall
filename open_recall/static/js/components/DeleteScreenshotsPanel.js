@@ -66,7 +66,7 @@ const DeleteScreenshotsPanel = ({ onScreenshotsDeleted }) => {
         `/api/screenshots/before-date/${date}${queryString}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await response.json();

@@ -46,7 +46,7 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
       setFilteredSuggestions([]);
     } else {
       const filtered = appNameSuggestions.filter((app) =>
-        app.toLowerCase().includes(value.toLowerCase())
+        app.toLowerCase().includes(value.toLowerCase()),
       );
       setFilteredSuggestions(filtered);
     }
@@ -83,7 +83,7 @@ const FilterPanel = ({ filters, onFilterChange, appNameSuggestions }) => {
         `/api/summarize-search?${params.toString()}`,
         {
           method: "POST",
-        }
+        },
       );
 
       if (response.ok) {

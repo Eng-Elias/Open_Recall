@@ -95,7 +95,7 @@ const App = () => {
             const updatedItems = prev.items.map((screenshot) =>
               screenshot.id === data.screenshot_id
                 ? { ...screenshot, is_favorite: data.is_favorite }
-                : screenshot
+                : screenshot,
             );
             return {
               ...prev,
@@ -112,7 +112,7 @@ const App = () => {
                     ...screenshot,
                     tags: [...screenshot.tags, data.tag],
                   }
-                : screenshot
+                : screenshot,
             );
             return {
               ...prev,
@@ -128,10 +128,10 @@ const App = () => {
                 ? {
                     ...screenshot,
                     tags: screenshot.tags.filter(
-                      (tag) => tag.id !== data.tag_id
+                      (tag) => tag.id !== data.tag_id,
                     ),
                   }
-                : screenshot
+                : screenshot,
             );
             return {
               ...prev,
@@ -163,7 +163,7 @@ const App = () => {
               return {
                 ...prev,
                 items: prev.items.filter(
-                  (screenshot) => !data.ids.includes(screenshot.id)
+                  (screenshot) => !data.ids.includes(screenshot.id),
                 ),
                 total: Math.max(0, prev.total - data.count),
                 pages: Math.max(1, Math.ceil((prev.total - data.count) / 12)),
@@ -179,7 +179,7 @@ const App = () => {
             const updatedItems = prev.items.map((screenshot) =>
               screenshot.id === data.screenshot_id
                 ? { ...screenshot, notes: data.notes }
-                : screenshot
+                : screenshot,
             );
             return {
               ...prev,
@@ -212,7 +212,7 @@ const App = () => {
 
   const fetchScreenshots = async (page = currentPage) => {
     const params = new URLSearchParams({
-      page: page,
+      page,
       size: 12,
       ...(filters.startDate && { start_date: filters.startDate }),
       ...(filters.endDate && { end_date: filters.endDate }),
@@ -257,7 +257,7 @@ const App = () => {
     if (selectedScreenshot) {
       // Initialize tooltips
       const tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        document.querySelectorAll('[data-bs-toggle="tooltip"]'),
       );
       tooltipTriggerList.forEach(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);

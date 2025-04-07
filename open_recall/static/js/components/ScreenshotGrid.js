@@ -47,7 +47,7 @@ const ScreenshotGrid = ({
   React.useEffect(() => {
     if (selectedScreenshot) {
       const updatedScreenshot = screenshots.items.find(
-        (s) => s.id === selectedScreenshot.id
+        (s) => s.id === selectedScreenshot.id,
       );
       if (updatedScreenshot) {
         setSelectedScreenshot(updatedScreenshot);
@@ -82,7 +82,7 @@ const ScreenshotGrid = ({
                   </span>
                 </div>
                 <p className="card-text small text-muted">
-                  {moment(screenshot.timestamp + "Z").calendar()}
+                  {moment(`${screenshot.timestamp}Z`).calendar()}
                 </p>
                 <div className="tags-container">
                   {screenshot.tags.map((tag) => (
@@ -109,7 +109,8 @@ const ScreenshotGrid = ({
                     <ul className="dropdown-menu">
                       {allTags
                         .filter(
-                          (tag) => !screenshot.tags.some((t) => t.id === tag.id)
+                          (tag) =>
+                            !screenshot.tags.some((t) => t.id === tag.id),
                         )
                         .map((tag) => (
                           <li key={tag.id}>
@@ -212,7 +213,7 @@ const ScreenshotGrid = ({
                         {page}
                       </button>
                     </li>
-                  )
+                  ),
                 );
             })()}
             <li
