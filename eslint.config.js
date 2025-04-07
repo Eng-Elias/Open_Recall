@@ -60,7 +60,7 @@ export default [
       "no-multiple-empty-lines": ["warn", { max: 1 }],
       "no-trailing-spaces": "warn",
       semi: ["error", "always"],
-      quotes: ["error", "single", { avoidEscape: true }],
+      quotes: ["error", "double", { avoidEscape: true }],
       indent: ["error", 2],
 
       // Modern JavaScript
